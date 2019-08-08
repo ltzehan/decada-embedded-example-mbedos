@@ -16,7 +16,7 @@ MANUCA OS is a functional real-time operating system for sensor node developers 
 
 ---
 ## Quick Start
- * Set up the development environment (<tech-stack-landing-page>) 
+ * Set up the development environment (https://siot.gov.sg.com/starter-kit/set-up-your-software/) 
  * Clone the repository onto local disk: 
     `git clone --recurse-submodules https://github.com/GovTechSIOT/stack-manuca-os.git`
  * Toggle operating modes in mbed_app.json
@@ -32,4 +32,4 @@ MANUCA OS is a functional real-time operating system for sensor node developers 
 
 ---
 ## License
-Apache 2.0 (see <tech-stack-landing-page>)
+Apache 2.0 (see https://siot.gov.sg/starter-kit/licensing/)
