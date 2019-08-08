@@ -11,7 +11,7 @@ MANUCA OS is a functional real-time operating system for sensor node developers 
 
 ---
 ## System Requirements
-* Ubuntu 18.04 LTS
+* Windows, MacOS or Ubuntu 18.04
 * mbed-cli (https://os.mbed.com/docs/mbed-os/v5.8/tutorials/quick-start-offline.html)
 
 ---
