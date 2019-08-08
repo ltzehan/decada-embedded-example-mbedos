@@ -230,8 +230,8 @@ std::string GetUserInputString(bool is_hidden)
  */
 void SetDefaultConfig()
 {
-    WriteWifiSsid("LaaP AP");
-    WriteWifiPass("satpass123");
+    WriteWifiSsid("WIFI_SSID");
+    WriteWifiPass("WIFI_PW");
     WriteSSLPrivateKey("");
     WriteClientCertificate("");
 }

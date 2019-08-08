@@ -43,23 +43,23 @@
         },
         "decada-ou-id": {
             "help": "Organization Unit ID issued for connecting to DECADAcloud",
-            "value": "\"o15436458689361\""
+            "value": "\"enter_organization_unit_id_here\""
         },
         "decada-access-key": {
             "help": "Access key issued for connecting to DECADAcloud application",
-            "value": "\"f5a2c089-fdf7-4e3b37ddfb5f-439d-4f93\""
+            "value": "\"enter_access_key_here]\""
         },
         "decada-access-secret": {
             "help": "Access secret issued for connecting to DECADAcloud application",
-            "value": "\"37ddfb5f-439d-4f93-ba76-54bb1aea6a6b\""
+            "value": "\"enter_access secret_here]\""
         },
         "decada-product-key": {
             "help": "Product key issued for connecting to DECADAcloud product",
-            "value": "\"cEvLDHoz\""
+            "value": "\"enter_product_key_here\""
         },
         "decada-product-secret": {
             "help": "Product secret issued for connecting to DECADAcloud product",
-            "value": "\"BmOW5pbQxx2\""
+            "value": "\"enter_product_secret_here]\""
         }
     },
     "target_overrides": {
