@@ -1,0 +1,11 @@
+#ifndef MQTT_SERVER_SETTING_H
+#define MQTT_SERVER_SETTING_H
+
+#if MBED_CONF_APP_USE_TLS == 1
+const int MQTT_SERVER_PORT = 18883;
+#else
+/* No TLS */
+const int MQTT_SERVER_PORT = 1883;
+#endif  // MBED_CONF_APP_USE_TLS == 1
+
+#endif  // MQTT_SERVER_SETTING_H
