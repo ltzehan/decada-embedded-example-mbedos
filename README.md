@@ -1,4 +1,6 @@
-![MANUCA_OS_LOGO](/doc/manuca_os_logo_800_600.png)
+<div align="center">
+  <img src="https://github.com/GovTechSIOT/stack-manuca-os/blob/master/doc/manuca_os_logo_800_600.png">
+</div>
 
 ## Introduction
 MANUCA OS is a functional real-time operating system for sensor node developers to swiftly build upon using the MANUCA DK, and publish sensor measure points to the government cloud via DECADA Cloud.
