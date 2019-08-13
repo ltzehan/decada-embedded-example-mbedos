@@ -51,7 +51,7 @@
         },
         "decada-access-secret": {
             "help": "Access secret issued for connecting to DECADAcloud application",
-            "value": "\"enter_access secret_here\""
+            "value": "\"enter_access_secret_here\""
         },
         "decada-product-key": {
             "help": "Product key issued for connecting to DECADAcloud product",
