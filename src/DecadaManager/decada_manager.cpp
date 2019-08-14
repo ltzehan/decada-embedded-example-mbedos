@@ -115,7 +115,7 @@ std::string GetDecadaRootCA(NetworkInterface* network)
     {
         tr_warn("HttpRequest failed (error code %d)");
         delete request;
-        return "";
+        return "invalid";
     }
     else
     {
@@ -150,7 +150,8 @@ std::string CheckDeviceRegistrationStatus(NetworkInterface* network)
     if (!response) 
     {
         delete request;
-        printf("HttpRequest failed (error code %d)\n");    
+        printf("HttpRequest failed (error code %d)\n");
+        return "invalid";   
     }
     else
     {
@@ -208,7 +209,8 @@ std::string RegisterDeviceToDecada(NetworkInterface* network, std::string device
     if (!response) 
     {
         delete request;
-        printf("HttpRequest failed (error code %d)\n");    
+        printf("HttpRequest failed (error code %d)\n");
+        return "invalid";
     }
     else
     {
@@ -237,7 +239,7 @@ std::string ApplyMqttCertificate(NetworkInterface* network, std::string decada_r
 {    
     const std::string timestamp_ms = MsPaddingIntToString(RawRtcTimeNow());
     
-    const std::string ssl_csr = GenerateCsr(decada_root_ca);
+    const std::string ssl_csr = GenerateCsr(decada_root_ca, timestamp_ms);
     const std::string body_sanitized = CSRPEMFormatter(ssl_csr);    
 
     /* Sort in ASCII order */
@@ -255,7 +257,8 @@ std::string ApplyMqttCertificate(NetworkInterface* network, std::string decada_r
     if (!response) 
     {
         delete request;
-        printf("HttpRequest failed (error code %d)\n");    
+        printf("HttpRequest failed (error code %d)\n");
+        return "invalid";
     }
     else
     {
