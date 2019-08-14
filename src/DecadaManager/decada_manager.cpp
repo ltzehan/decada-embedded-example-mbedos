@@ -150,7 +150,8 @@ std::string CheckDeviceRegistrationStatus(NetworkInterface* network)
     if (!response) 
     {
         delete request;
-        printf("HttpRequest failed (error code %d)\n");    
+        printf("HttpRequest failed (error code %d)\n");
+        return "";   
     }
     else
     {
@@ -208,7 +209,8 @@ std::string RegisterDeviceToDecada(NetworkInterface* network, std::string device
     if (!response) 
     {
         delete request;
-        printf("HttpRequest failed (error code %d)\n");    
+        printf("HttpRequest failed (error code %d)\n");
+        return "";
     }
     else
     {
@@ -255,7 +257,8 @@ std::string ApplyMqttCertificate(NetworkInterface* network, std::string decada_r
     if (!response) 
     {
         delete request;
-        printf("HttpRequest failed (error code %d)\n");    
+        printf("HttpRequest failed (error code %d)\n");
+        return "";
     }
     else
     {
