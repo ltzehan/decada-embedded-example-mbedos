@@ -51,12 +51,12 @@ static unsigned char 						mbedtls_csr_pem[4096];
  *  @param  decada_root_ca   Root CA from decada
  *  @return Return PEM-formatted CSR
  */
-std::string GenerateCsr(std::string decada_root_ca)
+std::string GenerateCsr(std::string decada_root_ca, std::string timestamp)
 {
 	ssl_ca_params ssl_ca_info; 
     int rc = X509CADecoder(decada_root_ca, ssl_ca_info);
     std::string csr_info = "C=" +  ssl_ca_info.country_name + ", ST=" +  ssl_ca_info.state_name +
-	 ", L=Singapore, O=" +  ssl_ca_info.org_name + ", OU=Decada, CN=" + device_uuid;
+	 ", L=Singapore, O=" +  ssl_ca_info.org_name + ", OU=Decada, CN=" + device_uuid + timestamp;
 
 	const char* mbedtls_subject_name = csr_info.c_str(); 
 

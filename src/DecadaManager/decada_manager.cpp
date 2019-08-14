@@ -239,7 +239,7 @@ std::string ApplyMqttCertificate(NetworkInterface* network, std::string decada_r
 {    
     const std::string timestamp_ms = MsPaddingIntToString(RawRtcTimeNow());
     
-    const std::string ssl_csr = GenerateCsr(decada_root_ca);
+    const std::string ssl_csr = GenerateCsr(decada_root_ca, timestamp_ms);
     const std::string body_sanitized = CSRPEMFormatter(ssl_csr);    
 
     /* Sort in ASCII order */

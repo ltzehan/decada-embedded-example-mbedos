@@ -27,7 +27,7 @@ typedef struct {
 } ssl_ca_params;
 
 int GenerateRSAKeypair(void);
-std::string GenerateCsr(std::string decada_root_ca);
+std::string GenerateCsr(std::string decada_root_ca, std::string timestamp);
 std::string CSRPEMFormatter(std::string s);
 std::string CAPEMFormatter(std::string s);
 bool X509IssuerInfo (char* buf, size_t size, const mbedtls_x509_crt* crt);
