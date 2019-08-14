@@ -258,7 +258,7 @@ std::string ApplyMqttCertificate(NetworkInterface* network, std::string decada_r
     {
         delete request;
         printf("HttpRequest failed (error code %d)\n");
-        return "";
+        return "invalid";
     }
     else
     {
