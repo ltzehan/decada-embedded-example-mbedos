@@ -115,7 +115,7 @@ std::string GetDecadaRootCA(NetworkInterface* network)
     {
         tr_warn("HttpRequest failed (error code %d)");
         delete request;
-        return "";
+        return "invalid";
     }
     else
     {
@@ -151,7 +151,7 @@ std::string CheckDeviceRegistrationStatus(NetworkInterface* network)
     {
         delete request;
         printf("HttpRequest failed (error code %d)\n");
-        return "";   
+        return "invalid";   
     }
     else
     {
@@ -210,7 +210,7 @@ std::string RegisterDeviceToDecada(NetworkInterface* network, std::string device
     {
         delete request;
         printf("HttpRequest failed (error code %d)\n");
-        return "";
+        return "invalid";
     }
     else
     {
