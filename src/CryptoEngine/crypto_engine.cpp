@@ -245,6 +245,8 @@ std::string CAPEMFormatter(std::string s)
  */
 bool X509IssuerInfo(char* buf, size_t size, const mbedtls_x509_crt* crt)
 {
+    printf("\r\n1\r\n");
+
     int ret;
     size_t n;
     char *p;
@@ -256,14 +258,11 @@ bool X509IssuerInfo(char* buf, size_t size, const mbedtls_x509_crt* crt)
     if(NULL == crt)
     {
         ret = mbedtls_snprintf(p, n, "\nCertificate is uninitialised!\n");
-        MBEDTLS_X509_SAFE_SNPRINTF;
 
         return false;
     }
 
-    MBEDTLS_X509_SAFE_SNPRINTF;
-    ret = mbedtls_x509_dn_gets(p, n, &crt->issuer);
-    MBEDTLS_X509_SAFE_SNPRINTF; 
+    ret = mbedtls_x509_dn_gets(p, n, &crt->issuer); 
     
     if (ret < 0)
     {
@@ -288,6 +287,7 @@ bool X509CADecoder(std::string ssl_ca, ssl_ca_params& ca_params)
 
     int n = ssl_ca.length();
     char ssl_ca_buf[n+1];
+
     strcpy(ssl_ca_buf, ssl_ca.c_str());
     
     const uint32_t buf_size = 512;
@@ -295,8 +295,8 @@ bool X509CADecoder(std::string ssl_ca, ssl_ca_params& ca_params)
     
     mbedtls_x509_crt x509_root_ca;
     mbedtls_x509_crt_init(&x509_root_ca);
-    mbedtls_x509_crt_parse(&x509_root_ca, (const unsigned char*) ssl_ca_buf, sizeof(ssl_ca_buf));
-    
+    int res = mbedtls_x509_crt_parse(&x509_root_ca, (const unsigned char*) ssl_ca_buf, sizeof(ssl_ca_buf));
+
     bool rc = X509IssuerInfo(buf, buf_size, &x509_root_ca);
     mbedtls_x509_crt_free(&x509_root_ca);
     
