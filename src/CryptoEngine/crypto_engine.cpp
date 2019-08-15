@@ -245,8 +245,6 @@ std::string CAPEMFormatter(std::string s)
  */
 bool X509IssuerInfo(char* buf, size_t size, const mbedtls_x509_crt* crt)
 {
-    printf("\r\n1\r\n");
-
     int ret;
     size_t n;
     char *p;
@@ -258,7 +256,6 @@ bool X509IssuerInfo(char* buf, size_t size, const mbedtls_x509_crt* crt)
     if(NULL == crt)
     {
         ret = mbedtls_snprintf(p, n, "\nCertificate is uninitialised!\n");
-
         return false;
     }
 
