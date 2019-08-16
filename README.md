@@ -5,7 +5,7 @@
 ## Introduction
 MANUCA OS is a functional real-time operating system for sensor node developers to swiftly build upon using the MANUCA DK, and publish sensor measure points to the government cloud via DECADA Cloud.
 
-For more information, visit https://siot.gov.sg/tech-stack/manuca/
+For more information, visit https://siot.gov.sg/tech-stack/manuca/overview/
 
 ---
 ## Development Team
