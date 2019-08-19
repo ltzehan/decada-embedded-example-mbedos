@@ -31,6 +31,7 @@ For more information, visit https://siot.gov.sg/tech-stack/manuca/overview/
 ## Documentation and References
 * Technical Instruction Manual: https://siot.gov.sg/starter-kit/introduction/
 * MANUCA DK User Manual: https://siot.gov.sg/files/MANUCA_User_Manual_V1.pdf
+* MANUCA Doxygen Documentation: <a href="https://govtechsiot.github.io/stack-manuca-os/"><img src="https://codedocs.xyz/doxygen/doxygen.svg"/></a>
 
 ---
 ## License and Contributions
