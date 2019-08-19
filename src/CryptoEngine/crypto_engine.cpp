@@ -292,7 +292,7 @@ bool X509CADecoder(std::string ssl_ca, ssl_ca_params& ca_params)
     
     mbedtls_x509_crt x509_root_ca;
     mbedtls_x509_crt_init(&x509_root_ca);
-    int res = mbedtls_x509_crt_parse(&x509_root_ca, (const unsigned char*) ssl_ca_buf, sizeof(ssl_ca_buf));
+    mbedtls_x509_crt_parse(&x509_root_ca, (const unsigned char*) ssl_ca_buf, sizeof(ssl_ca_buf));
 
     bool rc = X509IssuerInfo(buf, buf_size, &x509_root_ca);
     mbedtls_x509_crt_free(&x509_root_ca);
