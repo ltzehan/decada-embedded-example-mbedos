@@ -1,11 +1,11 @@
 <div align="center">
-  <img src="https://github.com/GovTechSIOT/stack-manuca-os/blob/master/doc/manuca_os_logo_800_600.png">
+  <img src="https://raw.githubusercontent.com/GovTechSIOT/stack-manuca-os/master/docs/manuca_os_logo_800_600.png">
 </div>
 
 ## Introduction
 MANUCA OS is a functional real-time operating system for sensor node developers to swiftly build upon using the MANUCA DK, and publish sensor measure points to the government cloud via DECADA Cloud.
 
-For more information, visit https://siot.gov.sg/tech-stack/manuca/
+For more information, visit https://siot.gov.sg/tech-stack/manuca/overview/
 
 ---
 ## Development Team
@@ -31,7 +31,8 @@ For more information, visit https://siot.gov.sg/tech-stack/manuca/
 ## Documentation and References
 * Technical Instruction Manual: https://siot.gov.sg/starter-kit/introduction/
 * MANUCA DK User Manual: https://siot.gov.sg/files/MANUCA_User_Manual_V1.pdf
+* MANUCA Doxygen Documentation: <a href="https://govtechsiot.github.io/stack-manuca-os/"><img src="https://codedocs.xyz/doxygen/doxygen.svg"/></a>
 
 ---
-## License
-Apache 2.0 (see https://siot.gov.sg/starter-kit/licensing/)
+## License and Contributions
+The software is provided under the Apache-2.0 license (see https://siot.gov.sg/starter-kit/licensing/). Contributions to this project repository are accepted under the same license. Please see [contributing.md](CONTRIBUTING.md) for more information. 
