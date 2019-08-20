@@ -61,7 +61,9 @@ int main()
 {   
     /* Wait for hardware signals to stabilize */
     wait(1);
-    
+
+    WirelessModuleReset();
+
     mbed_trace_init();
     
     bool boot = EnterBootManager();
