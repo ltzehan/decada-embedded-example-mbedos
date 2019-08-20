@@ -228,11 +228,24 @@ std::string GetUserInputString(bool is_hidden)
  *  @brief  Sets configuration parameters to default values
  *  @author Ng Tze Yang
  */
-void SetDefaultConfig()
+void SetDefaultConfig(void)
 {
     WriteWifiSsid("WIFI_SSID");
     WriteWifiPass("WIFI_PW");
     WriteSSLPrivateKey("");
     WriteClientCertificate("");
+}
+
+/**
+ *  @brief  Reset the wireless module
+ *  @author Goh Kok Boon
+ */
+void WirelessModuleReset(void)
+{
+    DigitalOut wifireset(PF_11);
+    wifireset = 0;
+    wait(1);
+    wifireset = 1;
+    wait(1);
 }
 /** @}*/
