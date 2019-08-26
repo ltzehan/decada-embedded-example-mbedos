@@ -66,7 +66,8 @@ $(function() {
 <div class="title">MANUCA OS Documentation</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><div align="center"> <img src="https://raw.githubusercontent.com/GovTechSIOT/stack-manuca-os/master/docs/manuca_os_logo_800_600.png" alt="" class="inline"/> </div><h2>Introduction</h2>
+<div class="textblock"><div align="center"> <img src="https://raw.githubusercontent.com/GovTechSIOT/stack-manuca-os/master/docs/manuca_os_logo_800_600.png" alt="" class="inline"/> </div><p><a href="https://govtechsiot.github.io/stack-manuca-os/"><img src="https://codedocs.xyz/doxygen/doxygen.svg" alt="" class="inline"/></a></p>
+<h2>Introduction</h2>
 <p>MANUCA OS is a functional real-time operating system for sensor node developers to swiftly build upon using the MANUCA DK, and publish sensor measure points to the government cloud via DECADA Cloud.</p>
 <p>For more information, visit <a href="https://siot.gov.sg/tech-stack/manuca/overview/">https://siot.gov.sg/tech-stack/manuca/overview/</a></p>
 <hr  />
@@ -84,11 +85,11 @@ $(function() {
 <hr  />
  <h2>Quick Start</h2>
 <ul>
-<li>Set up the development environment (<a href="https://siot.gov.sg/starter-kit/set-up-your-software/">https://siot.gov.sg/starter-kit/set-up-your-software/</a>)</li>
+<li>Set up the development environment (<a href="https://siot.gov.sg/starter-kit/set-up-your-software-env/">https://siot.gov.sg/starter-kit/set-up-your-software-env/</a>)</li>
 <li>Clone the repository onto local disk: <code>git clone --recurse-submodules <a href="https://github.com/GovTechSIOT/stack-manuca-os.git">https://github.com/GovTechSIOT/stack-manuca-os.git</a></code></li>
 <li>Toggle operating modes in mbed_app.json</li>
 <li>[Temporary due to DECADA Cloud migration] Disable SSL Verification by changing mbed-os/features/netsocket/TLSSocketWrapper.cpp line 550 to <code>mbedtls_ssl_conf_authmode(get_ssl_config(), MBEDTLS_SSL_VERIFY_NONE);</code></li>
-<li>Compile the binary (<a href="https://siot.gov.sg/starter-kit/build-and-flash/">https://siot.gov.sg/starter-kit/build-and-flash/</a>)</li>
+<li>Compile the binary (<a href="https://siot.gov.sg/starter-kit/build-and-flash-sw/">https://siot.gov.sg/starter-kit/build-and-flash-sw/</a>)</li>
 <li>Copy the binary file (.bin) into the MANUCA DK via programmer (eg. stlink v3).</li>
 </ul>
 <hr  />

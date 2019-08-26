@@ -51,9 +51,11 @@
 #define I2C_FREQUENCY   400000
 
 /** Create SCD30 driver class
- * @brief driver for the SCD30 CO2, RH/T sensor
- * inherits SensorType virtual functions essential for interfacing with SensorManager
- *
+ * @brief Driver for the SCD30 CO2, RH/T sensor
+ * Inherits SensorType virtual functions essential for interfacing with SensorManager
+ * 
+ * Example:
+ * @code{.cpp}
  * // in class SensorManager
  * 
  * std::vector<SensorType*> sensor_masterlist_;
@@ -74,6 +76,7 @@
  *          int stat = snr->GetData(data);
  *      }
  * }
+ * @endcode
  */
 class Scd30 : public SensorType {
 

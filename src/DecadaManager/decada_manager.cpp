@@ -1,3 +1,7 @@
+/**
+ * @defgroup decada_manager Decada Manager
+ * @{
+ */
 #include "decada_manager.h"
 #include "mbedtls/sha256.h"
 #include "mbedtls/sha1.h"
@@ -274,3 +278,5 @@ std::string ApplyMqttCertificate(NetworkInterface* network, std::string decada_r
         return decada_cert;
     }
 }
+
+/** @}*/
