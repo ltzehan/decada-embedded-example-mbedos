@@ -49,9 +49,11 @@
 #define I2C_FREQUENCY_STD   100000              // SPS30 uses 100MHz for I2C communication
 
 /** Create SPS30 controller class
- * @brief driver for the SPS30 Particulate Matter sensor
- * inherits SensorType virtual functions essential for interfacing with SensorManager
+ * @brief Driver for the SPS30 Particulate Matter sensor
+ * Inherits SensorType virtual functions essential for interfacing with SensorManager
  * 
+ * Example:
+ * @code{.cpp}
  * // in class SensorManager
  * 
  * std::vector<SensorType*> sensor_masterlist_;
@@ -72,6 +74,7 @@
  *          int stat = snr->GetData(data);
  *      }
  * }
+ * @endcode
  */
 class Sps30 : public SensorType {
 

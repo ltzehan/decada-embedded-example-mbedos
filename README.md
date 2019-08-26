@@ -21,12 +21,12 @@ For more information, visit https://siot.gov.sg/tech-stack/manuca/overview/
 
 ---
 ## Quick Start
- * Set up the development environment (https://siot.gov.sg/starter-kit/set-up-your-software/) 
+ * Set up the development environment (https://siot.gov.sg/starter-kit/set-up-your-software-env/) 
  * Clone the repository onto local disk: 
     `git clone --recurse-submodules https://github.com/GovTechSIOT/stack-manuca-os.git`
  * Toggle operating modes in mbed_app.json
  * [Temporary due to DECADA Cloud migration] Disable SSL Verification by changing mbed-os/features/netsocket/TLSSocketWrapper.cpp line 550 to `mbedtls_ssl_conf_authmode(get_ssl_config(), MBEDTLS_SSL_VERIFY_NONE);`
- * Compile the binary (https://siot.gov.sg/starter-kit/build-and-flash/)
+ * Compile the binary (https://siot.gov.sg/starter-kit/build-and-flash-sw/)
  * Copy the binary file (.bin) into the MANUCA DK via programmer (eg. stlink v3).
  
 ---

@@ -45,6 +45,35 @@
 
 #define TMP75_RESOLUTION			0.0625
 
+/** Create TMP75 driver class
+ * @brief Driver for the TMP75 Temperature sensor
+ * Inherits SensorType virtual functions essential for interfacing with SensorManager
+ *
+ * Example:
+ * @code{.cpp}
+ * // in class SensorManager
+ * 
+ * std::vector<SensorType*> sensor_masterlist_;
+ * 
+ * void SensorManager::CreateSensor()
+ * {
+ *      SensorType *tmp75 = new Tmp75(sda, scl);
+ *      tmp75->Enable();
+ *      sensor_masterlist_.push_back(tmp75);
+ * }
+ * 
+ * void SensorManager::GetSensorsData()
+ * {
+ *      for (int i=0; i<sensor_masterlist_.size(); i++)
+ *      {
+ *          std::vector<std::pair<std::string, std::string>> data;
+ *          SensorType *snr = sensor_masterlist[i];
+ *          int stat = snr->GetData(data);
+ *      }
+ * }
+ * @endcode
+ */
+
 class Tmp75 : public SensorType {
 
 public:
