@@ -342,8 +342,21 @@ bool X509CADecoder(std::string ssl_ca, ssl_ca_params& ca_params)
 std::string SignatureGenerator(std::string params)
 {
     std::string signing_params = MBED_CONF_APP_DECADA_ACCESS_KEY + params + MBED_CONF_APP_DECADA_ACCESS_SECRET;
-    char signing[signing_params.size()];
-    strcpy(signing, signing_params.c_str());
+    std::string converted = GenericSHA256Generator(signing_params); 
+
+    return converted;
+}
+
+/**
+ *  @brief  Generic SHA256 Signature Generator.
+ *  @author Lau Lee Hong
+ *  @param  input  Content required to generate signature 
+ *  @return C++ string containing 64-character hexadecimal representation of signature
+ */
+std::string GenericSHA256Generator(std::string input)
+{
+    char signing[input.size()];
+    strcpy(signing, input.c_str());
 
     unsigned char *signing_buffer = (unsigned char *) signing;
 

@@ -344,6 +344,39 @@ static control_t convert_lowercase_to_uppercase_alphabets_test_3(const size_t ca
     return CaseNext;
 }
 
+// Test for converting uppercase alphabets to lowcase - pure lowercase
+static control_t convert_uppercase_to_lowercase_alphabets_test_1(const size_t call_count) 
+{
+    std::string expected_result = "abcdefghijklmnopqrstuvwxyz";
+    std::string input = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    std::string actual_result = ToLowerCase(input);
+
+    TEST_ASSERT_EQUAL_STRING(expected_result.c_str(), actual_result.c_str());
+    return CaseNext;
+}
+
+// Test for converting uppercase alphabets to lowercase - mix of uppercase, lowercase, numbers, special symbols
+static control_t convert_uppercase_to_lowercase_alphabets_test_2(const size_t call_count) 
+{
+    std::string expected_result = "1aa2bb3cc4dd5ee#ff%gg&hh iijjkkllmmnnooppqqrrssttuuvvwwxxyyzz";
+    std::string input = "1aA2bB3cC4dD5eE#fF%gG&hH iIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ";
+    std::string actual_result = ToLowerCase(input);
+
+    TEST_ASSERT_EQUAL_STRING(expected_result.c_str(), actual_result.c_str());
+    return CaseNext;
+}
+
+// Test for converting uppercase alphabets to lowercase - null input string
+static control_t convert_uppercase_to_lowercase_alphabets_test_3(const size_t call_count) 
+{
+    std::string expected_result = "";
+    std::string input = "";
+    std::string actual_result = ToLowerCase(input);
+
+    TEST_ASSERT_EQUAL_STRING(expected_result.c_str(), actual_result.c_str());
+    return CaseNext;
+}
+
 // Test for converting string to double - long (8) decimal places
 static control_t convert_string_to_double_test_1(const size_t call_count) 
 {
@@ -414,6 +447,9 @@ Case cases[] =
     Case("Check ToUpperCase converting lowercase alphabets to uppercase - pure lowercase", convert_lowercase_to_uppercase_alphabets_test_1),
     Case("Check ToUpperCase converting lowercase alphabets to uppercase - mix of uppercase, lowercase, numbers, special symbols", convert_lowercase_to_uppercase_alphabets_test_2),
     Case("Check ToUpperCase converting lowercase alphabets to uppercase - null input string", convert_lowercase_to_uppercase_alphabets_test_3),
+    Case("Check ToLowerCase converting uppercase alphabets to lowercase - pure uppercase", convert_uppercase_to_lowercase_alphabets_test_1),
+    Case("Check ToLowerCase converting uppercase alphabets to lowercase - mix of uppercase, lowercase, numbers, special symbols", convert_uppercase_to_lowercase_alphabets_test_2),
+    Case("Check ToLowerCase converting uppercase alphabets to lowercase - null input string", convert_uppercase_to_lowercase_alphabets_test_3),
     Case("Check StringToDouble converting string to double - long (8) decimal places", convert_string_to_double_test_1),
     Case("Check StringToDouble converting string to double - integer input", convert_string_to_double_test_2),
     Case("Check StringToDouble converting string to double - negative number", convert_string_to_double_test_3)

@@ -30,6 +30,7 @@ int StringToInt(const std::string& str);
 std::string TimeToString(const std::time_t time);
 std::time_t StringToTime(const std::string& str);
 std::string ToUpperCase (std::string s);
+std::string ToLowerCase (std::string s);
 double StringToDouble (std::string s);
 
 #endif  // CONVERSIONS_H

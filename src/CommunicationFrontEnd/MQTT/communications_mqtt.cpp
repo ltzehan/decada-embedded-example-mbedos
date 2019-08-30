@@ -119,14 +119,14 @@ bool ConnectMqttClient(MQTT::Client<MQTTNetwork, Countdown>*& mqtt_client, MQTTN
     int rtc_time_ms = RawRtcTimeNow();
     std::string time_now_milli_sec = MsPaddingIntToString(rtc_time_ms);
 
-    std::string sha1_input = "clientId" + decada_device_key + "deviceKey" + decada_device_key + "productKey" + decada_product_key +
+    std::string sha256_input = "clientId" + decada_device_key + "deviceKey" + decada_device_key + "productKey" + decada_product_key +
      "timestamp" + time_now_milli_sec + device_secret;
 
-    std::string sha1_output = GenericSHA1Generator(sha1_input);
+    std::string sha256_output = GenericSHA256Generator(sha256_input);
 
-    std::string mqtt_decada_client_id = decada_device_key + "|securemode=2,signmethod=hmacsha1,timestamp=" + time_now_milli_sec + "|";
+    std::string mqtt_decada_client_id = decada_device_key + "|securemode=2,signmethod=sha256,timestamp=" + time_now_milli_sec + "|";
     std::string mqtt_decada_username = decada_device_key + "&" + decada_product_key;
-    std::string mqtt_decada_password = ToUpperCase(sha1_output);
+    std::string mqtt_decada_password = ToLowerCase(sha256_output);
     
     MQTTPacket_connectData data = MQTTPacket_connectData_initializer;
     data.MQTTVersion = 3;
