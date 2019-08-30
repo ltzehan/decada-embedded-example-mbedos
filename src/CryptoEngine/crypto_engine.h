@@ -33,6 +33,7 @@ std::string CAPEMFormatter(std::string s);
 bool X509IssuerInfo (char* buf, size_t size, const mbedtls_x509_crt* crt);
 bool X509CADecoder (std::string ssl_ca, ssl_ca_params& ca_params);
 std::string SignatureGenerator(std::string params);
+std::string GenericSHA256Generator(std::string input);
 std::string GenericSHA1Generator(std::string input);
 
 #endif  // CRYPTO_ENGINE_H

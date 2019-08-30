@@ -171,6 +171,18 @@ std::string ToUpperCase (std::string s)
 }
 
 /**
+ *  @brief  Converts uppercases in a C++ string to lowercase
+ *  @author Lau Lee Hong
+ *  @param  s C++ string
+ *  @return Original string with upper alphabets lowercased
+ */
+std::string ToLowerCase (std::string s)
+{
+    std::transform(s.begin(), s.end(), s.begin(), ::tolower);
+    return s;
+}
+
+/**
  *  @brief  Converts string holding data of a double to a double-type
  *  @author Lau Lee Hong
  *  @param  s C++ string containing data of a double
