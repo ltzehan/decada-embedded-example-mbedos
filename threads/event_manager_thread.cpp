@@ -8,7 +8,6 @@
 #include "threads.h"
 #include "mbed_trace.h"
 #include "global_params.h"
-#include "watchdog.h"
 #include "conversions.h"
 #include "param_control.h"
 
@@ -19,6 +18,7 @@ void event_manager_thread(void)
     #define TRACE_GROUP  "EventManagerThread"
    
     const uint32_t evtmgr_sleep_ms = 5000;
+    Watchdog &watchdog = Watchdog::get_instance();
 
     while (1)
     {
@@ -43,7 +43,8 @@ void event_manager_thread(void)
             mqtt_arrived_mail_box.free(mqtt_arrived_mail);
         }
 
-        wd.Service();
+        watchdog.kick();
+
         ThisThread::sleep_for(evtmgr_sleep_ms);
     }
 }

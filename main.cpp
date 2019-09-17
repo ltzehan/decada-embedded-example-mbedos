@@ -19,13 +19,12 @@
 #include "mbed_trace.h"
 #include "global_params.h"
 #include "threads.h"
-#include "watchdog.h"
 #include "boot_manager.h"
 #include "device_uid.h"
 #include "persist_store.h"
 
-#if (MBED_MAJOR_VERSION != 5 || MBED_MINOR_VERSION != 11 || MBED_PATCH_VERSION != 4)
-#error "MBed OS version is not targeted 5.11.4"
+#if (MBED_MAJOR_VERSION != 5 || MBED_MINOR_VERSION != 13 || MBED_PATCH_VERSION != 4)
+#error "MBed OS version is not targeted 5.13.4"
 #endif  // mbed-os version check
 
 #define TRACE_GROUP "Undefined"
@@ -54,7 +53,8 @@ Thread thread_4 (osPriorityNormal, OS_STACK_SIZE, NULL, "EventManagerThread");
 EventFlags event_flags;
 
 /* Watchdog Timer */
-Watchdog wd;
+const uint32_t wd_timeout_ms = 20000;
+Watchdog &watchdog = Watchdog::get_instance();
 
 #if !MBED_TEST_MODE
 int main()
@@ -78,7 +78,7 @@ int main()
         thread_3.start(behavior_coordinator_thread);
         thread_4.start(event_manager_thread);
         
-        wd.Configure(20.0);
+        watchdog.start(wd_timeout_ms);
         
         ThisThread::sleep_for(osWaitForever);
     }

@@ -6,7 +6,6 @@
 #include <string>
 #include "threads.h"
 #include "global_params.h"
-#include "watchdog.h"
 #include "conversions.h"
 #include "decada_manager.h"
 #include "persist_store.h"
@@ -52,6 +51,7 @@ void communications_controller_thread(void)
     
     const uint32_t comms_thread_sleep_ms = 500;
     const uint32_t ntp_counter_max = 14400000;      // (comms_thread_sleep_ms)*(ntp_counter_max) = 4 hours 
+    Watchdog &watchdog = Watchdog::get_instance();
 
     NetworkInterface* network = NULL;
     MQTTNetwork* mqtt_network = NULL;
@@ -91,7 +91,7 @@ void communications_controller_thread(void)
     }
     tr_info("Device is registered with DECADA.");
 
-    wd.Service(); 
+    watchdog.kick(); 
 
     cert = ReadClientCertificate();
     if (cert == "" || cert == "invalid" || ReadSSLPrivateKey() == "")
@@ -110,7 +110,7 @@ void communications_controller_thread(void)
     ConnectMqttNetwork(mqtt_network, network, decada_root_ca, cert, ReadSSLPrivateKey());
     ConnectMqttClient(mqtt_client, mqtt_network, device_secret);
 
-    wd.Service();
+    watchdog.kick();
     
     mqtt_stack stack;
     mqtt_stack* stack_ptr = &stack;
@@ -122,7 +122,7 @@ void communications_controller_thread(void)
     event_flags.set(FLAG_MQTT_OK);
     
     bool pub_ok = true;
-    uint8_t ntp_counter = ntp_counter_max;
+    uint32_t ntp_counter = ntp_counter_max;
     bool inital_ntp_update = false;
 
     for(auto& sub_topic : subscription_topics)
@@ -182,11 +182,11 @@ void communications_controller_thread(void)
         /* MQTT Reconnection: Attempt to reconnect. If fails, restart system. */
         if (pub_ok == false)
         {
-            wd.Service();
+            watchdog.kick();
             ReconnectMqttService(network,mqtt_network, mqtt_client, device_secret, subscription_topics, decada_root_ca, cert, ReadSSLPrivateKey());
         }
         
-        wd.Service();
+        watchdog.kick();
         ThisThread::sleep_for(comms_thread_sleep_ms);
     }
 }

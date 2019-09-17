@@ -8,7 +8,6 @@
 #include "mbed_trace.h"
 #include "mbed.h"
 #include "global_params.h"
-#include "watchdog.h"
 #include "conversions.h"
 #include "persist_store.h"
 #include "sensor_profile.h"
@@ -21,7 +20,8 @@ void behavior_coordinator_thread(void)
     #define TRACE_GROUP  "BehaviorCoordinatorThread"
 
     const uint32_t behav_thread_sleep_ms = 500;
-    
+    Watchdog &watchdog = Watchdog::get_instance();
+
     SensorProfile sensors_profile;
 
     bool send_packets = false;
@@ -83,7 +83,8 @@ void behavior_coordinator_thread(void)
             send_packets = false;
         }
 
-        wd.Service();
+        watchdog.kick();
+
         ThisThread::sleep_for(behav_thread_sleep_ms);
     }
 }
