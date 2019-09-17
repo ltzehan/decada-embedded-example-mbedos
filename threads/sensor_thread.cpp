@@ -7,7 +7,6 @@
 #include "threads.h"
 #include "mbed_trace.h"
 #include "global_params.h"
-#include "watchdog.h"
 #include "conversions.h"
 #include "persist_store.h"
 #include "time_engine.h"
@@ -59,6 +58,8 @@ void sensor_thread(void)
         
     const PinName i2c_data_pin = PinName::PB_9;
     const PinName i2c_clk_pin = PinName::PB_6;
+
+    Watchdog &watchdog = Watchdog::get_instance();
 
     int current_cycle_interval = StringToInt(ReadCycleInterval());
     int current_poll_count = current_cycle_interval / sensor_thread_sleep_ms;
@@ -136,7 +137,8 @@ void sensor_thread(void)
 
         execute_sensor_control(current_cycle_interval);
         
-        wd.Service();
+        watchdog.kick();
+
         ThisThread::sleep_for(sensor_thread_sleep_ms);
     }
 }

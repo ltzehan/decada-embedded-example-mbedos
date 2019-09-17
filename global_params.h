@@ -22,16 +22,12 @@
 #include "MQTTClient.h"
 #include "MQTTNetwork.h"
 #include "MQTTmbed.h"
-#include "lib/Watchdog/watchdog.h"
 
 /* Factory-set Device UUID */
 extern const std::string device_uuid;
 
 /* Global System State*/
 extern std::string system_state;
-
-/* Watchdog Timer */
-extern Watchdog wd;
 
 /* RTOS Mutex*/ 
 extern Mutex stdio_mutex;
