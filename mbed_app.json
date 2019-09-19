@@ -22,7 +22,7 @@
             "value": true
         },
         "wifi-tx": {
-            "help": "RX pin to WiFi module",
+            "help": "TX pin to WiFi module",
             "value": "PC_6"   
         },
         "wifi-rx": {
