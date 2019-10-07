@@ -85,3 +85,6 @@ mbed_settings.py
 
 # Doxygen
 *.tmp
+
+# SonarQube
+sonar-project.properties
