@@ -53,8 +53,7 @@ static unsigned char 						mbedtls_csr_pem[4096];
  */
 std::string GenerateCsr(std::string timestamp)
 {
-     std::string csr_info = "C=SG, ST=Singapore, L=Singapore, O=DECADA, OU=DECADA CA, CN=" + device_uuid + timestamp;
-
+    std::string csr_info = "C=SG, ST=Singapore, L=Singapore, O=DECADA, OU=DECADA CA, CN=" + device_uuid + timestamp;
 	const char* mbedtls_subject_name = csr_info.c_str(); 
 
 	if (GenerateRSAKeypair() == 1)
