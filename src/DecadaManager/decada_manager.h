@@ -20,7 +20,7 @@
 #include <string>
 #include "mbed.h"
 
-std::string GetDecadaRootCA(NetworkInterface* network);
+std::string GetDecadaRootCA(void);
 std::string CheckDeviceRegistrationStatus(NetworkInterface* network);
 std::string RegisterDeviceToDecada(NetworkInterface* network, std::string device_name);
 std::string ApplyMqttCertificate(NetworkInterface* network, std::string decada_root_ca);

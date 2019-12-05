@@ -47,29 +47,26 @@ static unsigned char 						mbedtls_csr_pem[4096];
 
 /**
  *  @brief  Generate CSR for retrieving client certificate from decada.
- *  @author Goh Kok Boon
- *  @param  decada_root_ca   Root CA from decada
+ *  @author Goh Kok Boon, Lau Lee Hong
+ *  @param  timestamp   Current unix epoch timestamp (in miliseconds)
  *  @return Return PEM-formatted CSR
  */
-std::string GenerateCsr(std::string decada_root_ca, std::string timestamp)
+std::string GenerateCsr(std::string timestamp)
 {
-    ssl_ca_params ssl_ca_info; 
-    int rc = X509CADecoder(decada_root_ca, ssl_ca_info);
-    std::string csr_info = "C=" +  ssl_ca_info.country_name + ", ST=" +  ssl_ca_info.state_name +
-	 ", L=Singapore, O=" +  ssl_ca_info.org_name + ", OU=Decada, CN=" + device_uuid + timestamp;
+     std::string csr_info = "C=SG, ST=Singapore, L=Singapore, O=DECADA, OU=DECADA CA, CN=" + device_uuid + timestamp;
 
-    const char* mbedtls_subject_name = csr_info.c_str(); 
+	const char* mbedtls_subject_name = csr_info.c_str(); 
 
-    if (GenerateRSAKeypair() == 1)
-    {
-	    mbedtls_x509write_csr_init(&mbedtls_csr_request);
-	    mbedtls_x509write_csr_set_md_alg(&mbedtls_csr_request, MBEDTLS_MD_SHA256);
-	    mbedtls_ctr_drbg_init(&mbedtls_ctrdrbg);
-	    memset(mbedtls_private_key, 0, sizeof(mbedtls_private_key));
+	if (GenerateRSAKeypair() == 1)
+	{
+		mbedtls_x509write_csr_init(&mbedtls_csr_request);
+		mbedtls_x509write_csr_set_md_alg(&mbedtls_csr_request, MBEDTLS_MD_SHA256);
+		mbedtls_ctr_drbg_init(&mbedtls_ctrdrbg);
+		memset(mbedtls_private_key, 0, sizeof(mbedtls_private_key));
 
         /* Seeding Random Number */
-	    mbedtls_entropy_init(&mbedtls_entropy);
-	    rc = mbedtls_ctr_drbg_seed(&mbedtls_ctrdrbg, mbedtls_entropy_func, &mbedtls_entropy, (const unsigned char *)mbedtls_pers, strlen(mbedtls_pers));
+		mbedtls_entropy_init(&mbedtls_entropy);
+		int rc = mbedtls_ctr_drbg_seed(&mbedtls_ctrdrbg, mbedtls_entropy_func, &mbedtls_entropy, (const unsigned char *)mbedtls_pers, strlen(mbedtls_pers));
 
 	    if (rc == 0)
 	    {

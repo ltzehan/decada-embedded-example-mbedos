@@ -73,7 +73,7 @@ void communications_controller_thread(void)
     UpdateRtc(ntp);
 
     /* Get DECADA root CA cert */
-    decada_root_ca = GetDecadaRootCA(network);
+    decada_root_ca = GetDecadaRootCA();
     tr_info("Root CA is retrieved from decada.");
 
     device_secret = CheckDeviceRegistrationStatus(network);
