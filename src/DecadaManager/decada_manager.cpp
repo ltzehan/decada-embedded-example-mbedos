@@ -20,31 +20,7 @@
  *
  * To add more root certificates, just concatenate them.
  */
-const char SSL_CA_STORE_PEM[] =  "-----BEGIN CERTIFICATE-----\n"
-    "MIIEHTCCAwWgAwIBAgIQToEtioJl4AsC7j41AkblPTANBgkqhkiG9w0BAQUFADCB\n"
-    "gTELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4G\n"
-    "A1UEBxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQxJzAlBgNV\n"
-    "BAMTHkNPTU9ETyBDZXJ0aWZpY2F0aW9uIEF1dGhvcml0eTAeFw0wNjEyMDEwMDAw\n"
-    "MDBaFw0yOTEyMzEyMzU5NTlaMIGBMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3Jl\n"
-    "YXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRowGAYDVQQKExFDT01P\n"
-    "RE8gQ0EgTGltaXRlZDEnMCUGA1UEAxMeQ09NT0RPIENlcnRpZmljYXRpb24gQXV0\n"
-    "aG9yaXR5MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA0ECLi3LjkRv3\n"
-    "UcEbVASY06m/weaKXTuH+7uIzg3jLz8GlvCiKVCZrts7oVewdFFxze1CkU1B/qnI\n"
-    "2GqGd0S7WWaXUF601CxwRM/aN5VCaTwwxHGzUvAhTaHYujl8HJ6jJJ3ygxaYqhZ8\n"
-    "Q5sVW7euNJH+1GImGEaaP+vB+fGQV+useg2L23IwambV4EajcNxo2f8ESIl33rXp\n"
-    "+2dtQem8Ob0y2WIC8bGoPW43nOIv4tOiJovGuFVDiOEjPqXSJDlqR6sA1KGzqSX+\n"
-    "DT+nHbrTUcELpNqsOO9VUCQFZUaTNE8tja3G1CEZ0o7KBWFxB3NH5YoZEr0ETc5O\n"
-    "nKVIrLsm9wIDAQABo4GOMIGLMB0GA1UdDgQWBBQLWOWLxkwVN6RAqTCpIb5HNlpW\n"
-    "/zAOBgNVHQ8BAf8EBAMCAQYwDwYDVR0TAQH/BAUwAwEB/zBJBgNVHR8EQjBAMD6g\n"
-    "PKA6hjhodHRwOi8vY3JsLmNvbW9kb2NhLmNvbS9DT01PRE9DZXJ0aWZpY2F0aW9u\n"
-    "QXV0aG9yaXR5LmNybDANBgkqhkiG9w0BAQUFAAOCAQEAPpiem/Yb6dc5t3iuHXIY\n"
-    "SdOH5EOC6z/JqvWote9VfCFSZfnVDeFs9D6Mk3ORLgLETgdxb8CPOGEIqB6BCsAv\n"
-    "IC9Bi5HcSEW88cbeunZrM8gALTFGTO3nnc+IlP8zwFboJIYmuNg4ON8qa90SzMc/\n"
-    "RxdMosIGlgnW2/4/PEZB31jiVg88O8EckzXZOFKs7sjsLjBOlDW0JB9LeGna8gI4\n"
-    "zJVSk/BwJVmcIGfE7vmLV2H0knZ9P4SNVbfo5azV8fUZVqZa+5Acr5Pr5RzUZ5dd\n"
-    "BA6+C4OmF4O5MBKgxTMVBbkN+8cFduPYSo38NBejxiEovjBFMR7HeL5YYTisO+IB\n"
-    "ZQ==\n"
-    "-----END CERTIFICATE-----\n"
+const char SSL_CA_STORE_PEM[] =  
     "-----BEGIN CERTIFICATE-----\n"
     "MIIF2DCCA8CgAwIBAgIQTKr5yttjb+Af907YWwOGnTANBgkqhkiG9w0BAQwFADCB\n"
     "hTELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4G\n"
@@ -78,22 +54,6 @@ const char SSL_CA_STORE_PEM[] =  "-----BEGIN CERTIFICATE-----\n"
     "QOhTsiedSrnAdyGN/4fy3ryM7xfft0kL0fJuMAsaDk527RH89elWsn2/x20Kk4yl\n"
     "0MC2Hb46TpSi125sC8KKfPog88Tk5c0NqMuRkrF8hey1FGlmDoLnzc7ILaZRfyHB\n"
     "NVOFBkpdn627G190\n"
-    "-----END CERTIFICATE-----\n"
-    "-----BEGIN CERTIFICATE-----\n"
-    "MIICiTCCAg+gAwIBAgIQH0evqmIAcFBUTAGem2OZKjAKBggqhkjOPQQDAzCBhTEL\n"
-    "MAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UE\n"
-    "BxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQxKzApBgNVBAMT\n"
-    "IkNPTU9ETyBFQ0MgQ2VydGlmaWNhdGlvbiBBdXRob3JpdHkwHhcNMDgwMzA2MDAw\n"
-    "MDAwWhcNMzgwMTE4MjM1OTU5WjCBhTELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdy\n"
-    "ZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgGA1UEChMRQ09N\n"
-    "T0RPIENBIExpbWl0ZWQxKzApBgNVBAMTIkNPTU9ETyBFQ0MgQ2VydGlmaWNhdGlv\n"
-    "biBBdXRob3JpdHkwdjAQBgcqhkjOPQIBBgUrgQQAIgNiAAQDR3svdcmCFYX7deSR\n"
-    "FtSrYpn1PlILBs5BAH+X4QokPB0BBO490o0JlwzgdeT6+3eKKvUDYEs2ixYjFq0J\n"
-    "cfRK9ChQtP6IHG4/bC8vCVlbpVsLM5niwz2J+Wos77LTBumjQjBAMB0GA1UdDgQW\n"
-    "BBR1cacZSBm8nZ3qQUfflMRId5nTeTAOBgNVHQ8BAf8EBAMCAQYwDwYDVR0TAQH/\n"
-    "BAUwAwEB/zAKBggqhkjOPQQDAwNoADBlAjEA7wNbeqy3eApyt4jf/7VGFAkK+qDm\n"
-    "fQjGGoe9GKhzvSbKYAydzpmfz1wPMOG+FDHqAjAU9JM8SaczepBGR7NjfRObTrdv\n"
-    "GDeAU/7dIOA1mjbRxwG55tzd8/8dLDoWV9mSOdY=\n"
     "-----END CERTIFICATE-----\n";
 
 const std::string decada_product_key = MBED_CONF_APP_DECADA_PRODUCT_KEY;
@@ -105,29 +65,11 @@ const std::string api_url = MBED_CONF_APP_DECADA_API_URL;
 /**
  *  @brief  Gets DECADA SSL Root CA for MQTT Connection.
  *  @author Lau Lee Hong
- *  @param  network  Pointer to network object 
- *  @return PEM-formatted SSL Root CA
+ *  @return PEM-formatted SSL Root CA - COMODO Cert.
  */
-std::string GetDecadaRootCA(NetworkInterface* network)
+std::string GetDecadaRootCA(void)
 {
-    HttpsRequest* request = new HttpsRequest(network, SSL_CA_STORE_PEM, HTTP_GET, MBED_CONF_APP_DECADA_CA_URL);
-    request->set_header("Content-Type", "application/json;charset=UTF-8");
- 
-    HttpResponse* response = request->send();
-    
-    if (!response) 
-    {
-        tr_warn("HttpRequest failed (error code %d)");
-        delete request;
-        return "invalid";
-    }
-    else
-    {
-        std::string root_ca = response->get_body_as_string();
-        root_ca = CAPEMFormatter(root_ca);
-        delete request;
-        return root_ca;
-    }
+    return SSL_CA_STORE_PEM;
 }
 
 /**
@@ -243,7 +185,7 @@ std::string ApplyMqttCertificate(NetworkInterface* network, std::string decada_r
 {    
     const std::string timestamp_ms = MsPaddingIntToString(RawRtcTimeNow());
     
-    const std::string ssl_csr = GenerateCsr(decada_root_ca, timestamp_ms);
+    const std::string ssl_csr = GenerateCsr(timestamp_ms);
     const std::string body_sanitized = CSRPEMFormatter(ssl_csr);    
 
     /* Sort in ASCII order */
