@@ -5,12 +5,13 @@
 
 #include <string>
 #include "threads.h"
+#include "mbed_trace.h"
+#include "rtos.h"
 #include "global_params.h"
 #include "conversions.h"
 #include "decada_manager.h"
 #include "persist_store.h"
 #include "time_engine.h"
-#include "mbed_trace.h"
 
 std::string device_secret, cert, decada_root_ca;
 std::string const SENSOR_PUB_TOPIC = std::string("/sys/") + MBED_CONF_APP_DECADA_PRODUCT_KEY + "/" + device_uuid + "/thing/measurepoint/post";

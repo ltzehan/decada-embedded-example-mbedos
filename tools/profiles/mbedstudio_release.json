@@ -21,8 +21,8 @@
                    "-fno-exceptions", "-MMD", "-D_LIBCPP_EXTERN_TEMPLATE(...)=",
                    "-fshort-enums", "-fshort-wchar", "-Wno-deprecated-register"],
         "asm": [],
-        "c": ["-D__ASSERT_MSG", "-std=gnu99"],
-        "cxx": ["-fno-rtti", "-std=gnu++11"],
+        "c": ["-D__ASSERT_MSG", "-std=gnu11"],
+        "cxx": ["-fno-rtti", "-std=gnu++14"],
         "ld": ["--show_full_path", "--legacyalign"]
     },
     "ARM": {
