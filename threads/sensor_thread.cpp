@@ -6,6 +6,7 @@
 #include <string>
 #include "threads.h"
 #include "mbed_trace.h"
+#include "rtos.h"
 #include "global_params.h"
 #include "conversions.h"
 #include "persist_store.h"

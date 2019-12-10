@@ -17,16 +17,18 @@
 #include "mbed_config.h"
 #include "mbed.h"
 #include "mbed_trace.h"
+#include "rtos.h"
 #include "global_params.h"
 #include "threads.h"
 #include "boot_manager.h"
 #include "device_uid.h"
 #include "persist_store.h"
 
-#if (MBED_MAJOR_VERSION != 5 || MBED_MINOR_VERSION != 13 || MBED_PATCH_VERSION != 4)
-#error "MBed OS version is not targeted 5.13.4"
+#if (MBED_MAJOR_VERSION != 5 || MBED_MINOR_VERSION != 14 || MBED_PATCH_VERSION != 2)
+#error "MBed OS version is not targeted 5.14.2"
 #endif  // mbed-os version check
 
+#define ONE_SEC_IN_MS   1000
 #define TRACE_GROUP "Undefined"
 
 /* Global System Parameters */
@@ -60,7 +62,7 @@ Watchdog &watchdog = Watchdog::get_instance();
 int main()
 {   
     /* Wait for hardware signals to stabilize */
-    wait(1);
+    ThisThread::sleep_for(ONE_SEC_IN_MS);
 
     WirelessModuleReset();
 

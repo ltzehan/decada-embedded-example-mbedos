@@ -2,6 +2,7 @@
     "macros": [ "MBED_HEAP_STATS_ENABLED=0",
                 "MBED_STACK_STATS_ENABLED=0",
                 "MBED_MEM_TRACING_ENABLED=0",
+                "OS_THREAD_LIBSPACE_NUM=5",
                 "MBEDTLS_USER_CONFIG_FILE=\"mbedtls_entropy_config.h\""
                 ],
     "config": {
@@ -33,10 +34,6 @@
             "help": "WiFi network security (enums from nsapi_security_t)",
             "value": "NSAPI_SECURITY_WPA_WPA2"
         },
-        "decada-ca-url": {
-            "help": "URL to access the root CA of DECADAcloud",
-            "value": "\"https://portal.decada.gov.sg/enos/CA/cacert\""
-        },
         "decada-api-url": {
             "help": "Root URL to access the APIs of DECADAcloud",
             "value": "\"https://portal.decada.gov.sg/enosapi\""
@@ -64,15 +61,16 @@
     },
     "target_overrides": {
         "*": {
-            "target.features_add": ["NANOSTACK", "STORAGE"],
-            "target.components_add": ["FLASHIAP"],
-            "storage.storage_type": "TDB_INTERNAL",
-            "mbed-trace.enable": 1,
-            "mbed-trace.max-level": "TRACE_LEVEL_INFO",
-            "platform.stdio-baud-rate": 115200,
-            "platform.stdio-convert-newlines": true,
-            "platform.error-reboot-max": 1000,
-            "platform.fatal-error-auto-reboot-enabled": true
+            "target.features_add"                       : ["NANOSTACK", "STORAGE"],
+            "target.components_add"                     : ["FLASHIAP"],
+            "storage.storage_type"                      : "TDB_INTERNAL",
+            "mbed-trace.enable"                         : 1,
+            "mbed-trace.max-level"                      : "TRACE_LEVEL_INFO",
+            "platform.stdio-baud-rate"                  : 115200,
+            "platform.stdio-convert-newlines"           : true,
+            "platform.error-reboot-max"                 : 1000,
+            "platform.fatal-error-auto-reboot-enabled"  : true,
+            "target.OUTPUT_EXT"                         : "bin"
         },
         "NUCLEO_F767ZI": {
             "target.macros_add"                         : ["DEVICE_UID_ADDR=0x1FF0F420"],
