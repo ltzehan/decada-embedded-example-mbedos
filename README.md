@@ -35,4 +35,4 @@ For more information, visit https://siot.gov.sg/tech-stack/manuca/overview/
 
 ---
 ## License and Contributions
-The software is provided under the Apache-2.0 license (see https://siot.gov.sg/starter-kit/licensing/). Contributions to this project repository are accepted under the same license. Please see [contributing.md](CONTRIBUTING.md) for more information. 
+The software is provided under the Apache-2.0 license (see https://www.siot.gov.sg/starter-kit/terms-and-conditions/). Contributions to this project repository are accepted under the same license. Please see [contributing.md](CONTRIBUTING.md) for more information. 
