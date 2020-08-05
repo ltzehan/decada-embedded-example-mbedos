@@ -134,9 +134,6 @@ std::string RegisterDeviceToDecada(NetworkInterface* network, std::string device
 
     Json::FastWriter fast_writer;
     std::string body = fast_writer.write(root);
-
-    /* Remove trailing '\n' char from FastWriter */
-    body = body.substr(0, body.length() - 1);
     const char* body_sanitized = (char*)body.c_str();
 
     /* Sort in ASCII order */
