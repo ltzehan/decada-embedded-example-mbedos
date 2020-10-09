@@ -26,7 +26,6 @@ void behavior_coordinator_thread(void)
     SensorProfile sensors_profile;
 
     bool send_packets = false;
-    int start_time_stamp;
     
     while (1) 
     {   
@@ -47,12 +46,11 @@ void behavior_coordinator_thread(void)
             {
                 if (new_value == "start")   // start of data stream from sensor thread
                 {
-                    start_time_stamp = new_time_stamp;   // store start timestamp of sensor data stream
+                    sensors_profile.ClearEntityList();
                 }
                 else                        // end of data stream from sensor thread
                 {
-                    sensors_profile.UpdateEntityList(start_time_stamp); // update entity list after end of data stream
-                    send_packets = sensors_profile.CheckEntityAvailability();    // indicate the start of sending data packets to comm thread
+                    send_packets = true;
                 }
             }
             else

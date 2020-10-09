@@ -13,7 +13,7 @@
 #include "trace_macro.h"
 
 #undef TRACE_GROUP
-#define TRACE_GROUP  "SUBSCRIPTION_CALLBACK"
+#define TRACE_GROUP  "SubscriptionCallback"
 
 /**
  *  @brief  Callback when a message has arrived from the broker.
