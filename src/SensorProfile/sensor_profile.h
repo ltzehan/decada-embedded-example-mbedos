@@ -1,5 +1,5 @@
 /*******************************************************************************************************
- * Copyright (c) 2018-2019 Government Technology Agency of Singapore (GovTech)
+ * Copyright (c) 2018-2020 Government Technology Agency of Singapore (GovTech)
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -42,6 +42,7 @@ class SensorProfile
     public:
         /// Public exposed methods
         void UpdateValue(std::string entity_name, std::string value, int timestamp);        /// mailbox receives from sensor thread; struct { char* sensor_type, char* value, int raw_time_stamp }
+        void ClearEntityList(void);
         void UpdateEntityList(int time_stamp);
         bool CheckEntityAvailability();
         std::string GetNewDecadaPacket();

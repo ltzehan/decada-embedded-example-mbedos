@@ -1,5 +1,5 @@
 /*******************************************************************************************************
- * Copyright (c) 2018-2019 Government Technology Agency of Singapore (GovTech)
+ * Copyright (c) 2020 Government Technology Agency of Singapore (GovTech)
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,16 +13,12 @@
  *
  * See the License for the specific language governing permissions and limitations under the License.
  *******************************************************************************************************/
-
-#ifndef DECADA_MANAGER_H
-#define DECADA_MANAGER_H
+#ifndef SUBSCRIPTION_CALLBACK_H
+#define SUBSCRIPTION_CALLBACK_H
 
 #include <string>
-#include "mbed.h"
+#include "MQTTClient.h"
 
-std::string GetDecadaRootCA(void);
-std::string CheckDeviceRegistrationStatus(NetworkInterface* network);
-std::string RegisterDeviceToDecada(NetworkInterface* network, std::string device_name);
-std::string ApplyMqttCertificate(NetworkInterface* network, std::string decada_root_ca);
+void SubscriptionMessageArrivalCallback(MQTT::MessageData& md);
 
-#endif  // DECADA_MANAGER_H
+ #endif  // SUBSCRIPTION_CALLBACK_H

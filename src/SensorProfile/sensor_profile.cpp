@@ -43,6 +43,15 @@ void SensorProfile::UpdateValue(std::string entity_name, std::string value, int 
 }
 
 /**
+ *  @brief  Public method that clear entity_value_pairs_.
+ *  @author Lau Lee Hong
+ */
+void SensorProfile::ClearEntityList(void)
+{
+    entity_value_pairs_.clear();
+}
+
+/**
  *  @brief  Public method that updates entity_value_pairs_ by removing any entity that has not been updated
  *  @author Yap Zi Qi
  *  @param  time_stamp  Raw system timestamp of the start of data stream from sensor thread

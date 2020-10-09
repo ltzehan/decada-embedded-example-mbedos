@@ -1,5 +1,5 @@
 /*******************************************************************************************************
- * Copyright (c) 2018-2019 Government Technology Agency of Singapore (GovTech)
+ * Copyright (c) 2018-2020 Government Technology Agency of Singapore (GovTech)
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,14 +17,13 @@
 #ifndef THREADS_H
 #define THREADS_H
  
-#include "global_params.h"
-#include "communications_mqtt.h"
+#include "decada_manager_v2.h"
 
 /* behavior_coordinator_thread.cpp */
 void behavior_coordinator_thread(void);
 
 /* communications_thread.cpp */
-void subscription_manager_thread(mqtt_stack* stack);
+void subscription_manager_thread(DecadaManagerV2* decada_ptr);
 void communications_controller_thread(void);
 
 /* event_manager_thread.cpp */

@@ -1,8 +1,9 @@
 /**
- * @defgroup crypto_engine Cryptography Engine
+ * @defgroup crypto_engine_v2 Crypto Engine V2
  * @{
  */
-#include "crypto_engine.h"
+
+#include "crypto_engine_v2.h"
 #include <regex>
 #include <sstream> 
 #include <vector>
@@ -23,7 +24,7 @@
 #include "persist_store.h"
 
 #undef TRACE_GROUP
-#define TRACE_GROUP  "CryptoEngine"
+#define TRACE_GROUP  "CryptoEngineV2"
 
 #define MBEDTLS_KEY_SIZE 					(2048)
 #define MBEDTLS_EXPONENT 					(65537)
@@ -46,12 +47,81 @@ static char								    mbedtls_private_key[1024];
 static unsigned char 						mbedtls_csr_pem[4096];
 
 /**
+ *  @brief  Generate PKI keypair for CSR generation.
+ *  @author Goh Kok Boon
+ *  @return Return Success/Fail code
+ */
+int CryptoEngineV2::GenerateRSAKeypair(void)
+{
+	int rc;
+	mbedtls_ctr_drbg_init(&mbedtls_ctrdrbg);
+	mbedtls_pk_init(&mbedtls_private_key_context);
+	memset(mbedtls_private_key, 0, sizeof(mbedtls_private_key));
+	mbedtls_mpi_init(&mbedtls_n);
+	mbedtls_mpi_init(&mbedtls_p);
+	mbedtls_mpi_init(&mbedtls_q);
+	mbedtls_mpi_init(&mbedtls_d);
+	mbedtls_mpi_init(&mbedtls_e);
+	mbedtls_mpi_init(&mbedtls_dp);
+	mbedtls_mpi_init(&mbedtls_dq);
+	mbedtls_mpi_init(&mbedtls_qp);
+
+	/* Seeding Random Number */
+	mbedtls_entropy_init(&mbedtls_entropy);
+	rc = mbedtls_ctr_drbg_seed(&mbedtls_ctrdrbg, mbedtls_entropy_func, &mbedtls_entropy, (const unsigned char *)mbedtls_pers, strlen(mbedtls_pers));
+	if (rc == 0)
+	{
+        /* Generating PKI - Private Key */
+		rc = mbedtls_pk_setup(&mbedtls_private_key_context, mbedtls_pk_info_from_type(MBEDTLS_PK_RSA));
+		if (rc == 0)
+		{
+			rc = mbedtls_rsa_gen_key(mbedtls_pk_rsa(mbedtls_private_key_context), mbedtls_ctr_drbg_random, &mbedtls_ctrdrbg, MBEDTLS_KEY_SIZE, MBEDTLS_EXPONENT);
+			if (rc == 0)
+			{
+                unsigned char output_buf[16000];
+                mbedtls_pk_write_key_pem(&mbedtls_private_key_context, output_buf, 16000);
+                std::string pk = (const char*) output_buf;
+                WriteSSLPrivateKey(pk);
+				tr_info("Private Key Generation Success");
+				return 1;
+			}
+			else
+			{
+				tr_warn(" FAILED - mbedtls_rsa_gen_key returned -0x%04x\r\n", -rc);
+			}
+		}
+		else
+		{
+			tr_warn("FAILED - mbedtls_pk_setup returned -0x%04x\r\n", -rc);
+		}
+	}
+	else
+	{
+		tr_warn("mbedtls_ctr_drbg_seed returned %d - FAILED\r\n", rc);
+	}
+
+	/* Free Resources */
+	mbedtls_mpi_free(&mbedtls_n);
+	mbedtls_mpi_free(&mbedtls_p);
+	mbedtls_mpi_free(&mbedtls_q);
+	mbedtls_mpi_free(&mbedtls_d);
+	mbedtls_mpi_free(&mbedtls_e);
+	mbedtls_mpi_free(&mbedtls_dp);
+	mbedtls_mpi_free(&mbedtls_dq);
+	mbedtls_mpi_free(&mbedtls_qp);
+	mbedtls_ctr_drbg_free(&mbedtls_ctrdrbg);
+	mbedtls_entropy_free(&mbedtls_entropy);
+
+	return 0;
+}
+
+/**
  *  @brief  Generate CSR for retrieving client certificate from decada.
  *  @author Goh Kok Boon, Lau Lee Hong
  *  @param  timestamp   Current unix epoch timestamp (in miliseconds)
  *  @return Return PEM-formatted CSR
  */
-std::string GenerateCsr(std::string timestamp)
+std::string CryptoEngineV2::GenerateCertificateSigningRequest(std::string timestamp)
 {
     std::string csr_info = "C=SG, ST=Singapore, L=Singapore, O=DECADA, OU=DECADA CA, CN=" + device_uuid + timestamp;
 	const char* mbedtls_subject_name = csr_info.c_str(); 
@@ -67,139 +137,48 @@ std::string GenerateCsr(std::string timestamp)
 		mbedtls_entropy_init(&mbedtls_entropy);
 		int rc = mbedtls_ctr_drbg_seed(&mbedtls_ctrdrbg, mbedtls_entropy_func, &mbedtls_entropy, (const unsigned char *)mbedtls_pers, strlen(mbedtls_pers));
 
-	    if (rc == 0)
-	    {
-		    /* Check the subject name for validity */
-		    rc = mbedtls_x509write_csr_set_subject_name(&mbedtls_csr_request, mbedtls_subject_name);
-		    if(rc == 0)
-		    {
-			    mbedtls_x509write_csr_set_key(&mbedtls_csr_request, &mbedtls_private_key_context);
+		if (rc == 0)
+		{
+			/* Check the subject name for validity */
+			rc = mbedtls_x509write_csr_set_subject_name(&mbedtls_csr_request, mbedtls_subject_name);
+			if(rc == 0)
+			{
+				mbedtls_x509write_csr_set_key(&mbedtls_csr_request, &mbedtls_private_key_context);
 
-			    /* Covert CSR in PEM format */
-			    memset(mbedtls_csr_pem, 0, sizeof(mbedtls_csr_pem));
-			    rc = mbedtls_x509write_csr_pem(&mbedtls_csr_request, mbedtls_csr_pem, sizeof(mbedtls_csr_pem), mbedtls_ctr_drbg_random, &mbedtls_ctrdrbg);
+				/* Covert CSR in PEM format */
+				memset(mbedtls_csr_pem, 0, sizeof(mbedtls_csr_pem));
+				rc = mbedtls_x509write_csr_pem(&mbedtls_csr_request, mbedtls_csr_pem, sizeof(mbedtls_csr_pem), mbedtls_ctr_drbg_random, &mbedtls_ctrdrbg);
 
-			    if (rc >= 0)
-			    {
-				    tr_info("CSR PEM Generation Successful");
-				    mbedtls_x509write_csr_free(&mbedtls_csr_request);
-				    mbedtls_pk_free(&mbedtls_private_key_context);
-				    mbedtls_ctr_drbg_free(&mbedtls_ctrdrbg);
-				    mbedtls_entropy_free(&mbedtls_entropy);
-				    return (char*)mbedtls_csr_pem;
-			    }
-			    else
-			    {
-				    tr_warn("mbedtls_x509write_csr_pem returned %d - FAILED\r\n", rc);
-			    }
-		    }
-		    else
-		    {
-			    tr_warn("mbedtls_x509write_csr_set_subject_name returned %d - FAILED\r\n", rc);
-		    }
-	    }
-	    else
-	    {
-		    tr_warn("mbedtls_ctr_drbg_seed returned %d - FAILED\r\n", rc);
-	    }
+				if (rc >= 0)
+				{
+					tr_info("CSR PEM Generation Successful");
+					mbedtls_x509write_csr_free(&mbedtls_csr_request);
+					mbedtls_pk_free(&mbedtls_private_key_context);
+					mbedtls_ctr_drbg_free(&mbedtls_ctrdrbg);
+					mbedtls_entropy_free(&mbedtls_entropy);
+					return (char*)mbedtls_csr_pem;
+				}
+				else
+				{
+					tr_warn("mbedtls_x509write_csr_pem returned %d - FAILED\r\n", rc);
+				}
+			}
+			else
+			{
+				tr_warn("mbedtls_x509write_csr_set_subject_name returned %d - FAILED\r\n", rc);
+			}
+		}
+		else
+		{
+			tr_warn("mbedtls_ctr_drbg_seed returned %d - FAILED\r\n", rc);
+		}
 
-	    mbedtls_x509write_csr_free(&mbedtls_csr_request);
-	    mbedtls_pk_free(&mbedtls_private_key_context);
-	    mbedtls_ctr_drbg_free(&mbedtls_ctrdrbg);
-	    mbedtls_entropy_free(&mbedtls_entropy);
-    }
+		mbedtls_x509write_csr_free(&mbedtls_csr_request);
+		mbedtls_pk_free(&mbedtls_private_key_context);
+		mbedtls_ctr_drbg_free(&mbedtls_ctrdrbg);
+		mbedtls_entropy_free(&mbedtls_entropy);
+	}
     return "";
-}
-
-/**
- *  @brief  Generate PKI keypair for CSR generation.
- *  @author Goh Kok Boon
- *  @return Return Success/Fail code
- */
-int GenerateRSAKeypair(void)
-{
-    int rc;
-    mbedtls_ctr_drbg_init(&mbedtls_ctrdrbg);
-    mbedtls_pk_init(&mbedtls_private_key_context);
-    memset(mbedtls_private_key, 0, sizeof(mbedtls_private_key));
-    mbedtls_mpi_init(&mbedtls_n);
-    mbedtls_mpi_init(&mbedtls_p);
-    mbedtls_mpi_init(&mbedtls_q);
-    mbedtls_mpi_init(&mbedtls_d);
-    mbedtls_mpi_init(&mbedtls_e);
-    mbedtls_mpi_init(&mbedtls_dp);
-    mbedtls_mpi_init(&mbedtls_dq);
-    mbedtls_mpi_init(&mbedtls_qp);
-
-    /* Seeding Random Number */
-    mbedtls_entropy_init(&mbedtls_entropy);
-    rc = mbedtls_ctr_drbg_seed(&mbedtls_ctrdrbg, mbedtls_entropy_func, &mbedtls_entropy, (const unsigned char *)mbedtls_pers, strlen(mbedtls_pers));
-    if (rc == 0)
-    {
-        /* Generating PKI - Private Key */
-	    rc = mbedtls_pk_setup(&mbedtls_private_key_context, mbedtls_pk_info_from_type(MBEDTLS_PK_RSA));
-	    if (rc == 0)
-	    {
-		    rc = mbedtls_rsa_gen_key(mbedtls_pk_rsa(mbedtls_private_key_context), mbedtls_ctr_drbg_random, &mbedtls_ctrdrbg, MBEDTLS_KEY_SIZE, MBEDTLS_EXPONENT);
-		    if (rc == 0)
-		    {
-                unsigned char output_buf[16000];
-                mbedtls_pk_write_key_pem(&mbedtls_private_key_context, output_buf, 16000);
-                std::string pk = (const char*) output_buf;
-                WriteSSLPrivateKey(pk);
-			    tr_info("Private Key Generation Success");
-			    return 1;
-		    }
-		    else
-		    {
-			    tr_warn(" FAILED - mbedtls_rsa_gen_key returned -0x%04x\r\n", -rc);
-		    }
-	    }
-	    else
-	    {
-		    tr_warn("FAILED - mbedtls_pk_setup returned -0x%04x\r\n", -rc);
-	    }
-    }
-    else
-    {
-	    tr_warn("mbedtls_ctr_drbg_seed returned %d - FAILED\r\n", rc);
-    }
-
-    /* Free Resources */
-    mbedtls_mpi_free(&mbedtls_n);
-    mbedtls_mpi_free(&mbedtls_p);
-    mbedtls_mpi_free(&mbedtls_q);
-    mbedtls_mpi_free(&mbedtls_d);
-    mbedtls_mpi_free(&mbedtls_e);
-    mbedtls_mpi_free(&mbedtls_dp);
-    mbedtls_mpi_free(&mbedtls_dq);
-    mbedtls_mpi_free(&mbedtls_qp);
-    mbedtls_ctr_drbg_free(&mbedtls_ctrdrbg);
-    mbedtls_entropy_free(&mbedtls_entropy);
-
-    return 0;
-}
-
-/**
- *  @brief  Format CRS to PEM.
- *  @author Lau Lee Hong
- *  @param  s   Unformatted CSR
- *  @return Return PEM-formatted CSR
- */
-std::string CSRPEMFormatter(std::string s)
-{
-    std::string ssl_csr = s;
-    std::string ssl_csr_spacer = "\n";
-    
-    std::regex r_spacer(ssl_csr_spacer);
-    
-    /* Replace '\n' in the body with '\\n' */
-    ssl_csr = std::regex_replace(ssl_csr, r_spacer, "\\n");
-
-    /* Append header and footer string literal */
-    ssl_csr = "\"" + ssl_csr + "\"";
-    
-    return ssl_csr;
 }
 
 /**
@@ -208,7 +187,7 @@ std::string CSRPEMFormatter(std::string s)
  *  @param  s   Unformatted SSL CA Certificate
  *  @return Return PEM-formatted SSL-CA Certificate
  */
-std::string CAPEMFormatter(std::string s)
+std::string CryptoEngineV2::CertificateAuthorityPEMFormatter(std::string s)
 {
     std::string ssl_ca = s;
     std::string ssl_ca_header = "-----BEGIN CERTIFICATE-----";
@@ -239,7 +218,7 @@ std::string CAPEMFormatter(std::string s)
  *  @param  crt     Pointer to x509 certificate struct
  *  @return true (success) / false (failure)
  */
-bool X509IssuerInfo(char* buf, size_t size, const mbedtls_x509_crt* crt)
+bool CryptoEngineV2::X509IssuerInfo(char* buf, size_t size, const mbedtls_x509_crt* crt)
 {
     int ret;
     size_t n;
@@ -252,10 +231,11 @@ bool X509IssuerInfo(char* buf, size_t size, const mbedtls_x509_crt* crt)
     if(NULL == crt)
     {
         ret = mbedtls_snprintf(p, n, "\nCertificate is uninitialised!\n");
+
         return false;
     }
 
-    ret = mbedtls_x509_dn_gets(p, n, &crt->issuer); 
+    ret = mbedtls_x509_dn_gets(p, n, &crt->issuer);
     
     if (ret < 0)
     {
@@ -274,13 +254,12 @@ bool X509IssuerInfo(char* buf, size_t size, const mbedtls_x509_crt* crt)
  *  @param  ca_params   Address of struct holding country_name, state_name and org_name
  *  @return true (success) / false (failure)
  */
-bool X509CADecoder(std::string ssl_ca, ssl_ca_params& ca_params)
+bool CryptoEngineV2::X509CertificateAuthorityDecoder(std::string ssl_ca, ssl_ca_params &ca_params)
 {    
     std::string ca_country_name, ca_state_name, ca_org_name;
 
     int n = ssl_ca.length();
     char ssl_ca_buf[n+1];
-
     strcpy(ssl_ca_buf, ssl_ca.c_str());
     
     const uint32_t buf_size = 512;
@@ -289,7 +268,7 @@ bool X509CADecoder(std::string ssl_ca, ssl_ca_params& ca_params)
     mbedtls_x509_crt x509_root_ca;
     mbedtls_x509_crt_init(&x509_root_ca);
     mbedtls_x509_crt_parse(&x509_root_ca, (const unsigned char*) ssl_ca_buf, sizeof(ssl_ca_buf));
-
+    
     bool rc = X509IssuerInfo(buf, buf_size, &x509_root_ca);
     mbedtls_x509_crt_free(&x509_root_ca);
     
@@ -335,7 +314,7 @@ bool X509CADecoder(std::string ssl_ca, ssl_ca_params& ca_params)
  *  @param  params  Content required to generate signature 
  *  @return C++ string containing 64-character hexadecimal representation of signature
  */
-std::string SignatureGenerator(std::string params)
+std::string CryptoEngineV2::SignatureGenerator(std::string params)
 {
     std::string signing_params = MBED_CONF_APP_DECADA_ACCESS_KEY + params + MBED_CONF_APP_DECADA_ACCESS_SECRET;
     std::string converted = GenericSHA256Generator(signing_params); 
@@ -349,7 +328,7 @@ std::string SignatureGenerator(std::string params)
  *  @param  input  Content required to generate signature 
  *  @return C++ string containing 64-character hexadecimal representation of signature
  */
-std::string GenericSHA256Generator(std::string input)
+std::string CryptoEngineV2::GenericSHA256Generator(std::string input)
 {
     char signing[input.size()];
     strcpy(signing, input.c_str());
@@ -377,7 +356,7 @@ std::string GenericSHA256Generator(std::string input)
  *  @param  input  Content required to generate signature 
  *  @return C++ string containing 40-character hexadecimal representation of signature
  */
-std::string GenericSHA1Generator(std::string input)
+std::string CryptoEngineV2::GenericSHA1Generator(std::string input)
 {
     char signing[input.size()];
     strcpy(signing, input.c_str());
@@ -399,4 +378,4 @@ std::string GenericSHA1Generator(std::string input)
     return converted;
 }
 
-/** @}*/
+ /** @}*/
