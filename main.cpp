@@ -1,5 +1,5 @@
 /*******************************************************************************************************
- * Copyright (c) 2018-2019 Government Technology Agency of Singapore (GovTech)
+ * Copyright (c) 2018-2020 Government Technology Agency of Singapore (GovTech)
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");

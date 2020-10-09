@@ -13,23 +13,19 @@
  *
  * See the License for the specific language governing permissions and limitations under the License.
  *******************************************************************************************************/
- 
-#ifndef THREADS_H
-#define THREADS_H
- 
-#include "decada_manager_v2.h"
+#ifndef COMMUNICATIONS_NETWORK_H
+#define COMMUNICATIONS_NETWORK_H
 
-/* behavior_coordinator_thread.cpp */
-void behavior_coordinator_thread(void);
+#include <string>
+#include <unordered_set>
+#include "mbed.h"
 
-/* communications_thread.cpp */
-void subscription_manager_thread(DecadaManagerV2* decada_ptr);
-void communications_controller_thread(void);
+#undef USE_WIFI
+#if defined(MBED_CONF_APP_USE_WIFI) && (MBED_CONF_APP_USE_WIFI == 1)
+    #define USE_WIFI
+#endif  // USE_WIFI
 
-/* event_manager_thread.cpp */
-void event_manager_thread(void);
- 
-/* sensor_thread.cpp */
-void sensor_thread(void);
- 
-#endif  // THREADS_H 
+/* Network Connection */
+bool ConfigNetworkInterface(NetworkInterface*& network);
+
+#endif  // COMMUNICATIONS_NETWORK_H

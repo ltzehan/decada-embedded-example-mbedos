@@ -4,16 +4,18 @@
  */
 
 #include <string>
+#include <unordered_set>
+#include "rtos.h"
 #include "threads.h"
 #include "mbed_trace.h"
 #include "rtos.h"
 #include "global_params.h"
 #include "conversions.h"
-#include "decada_manager.h"
+#include "communications_network.h"
+#include "decada_manager_v2.h"
 #include "persist_store.h"
 #include "time_engine.h"
 
-std::string device_secret, cert, decada_root_ca;
 std::string const SENSOR_PUB_TOPIC = std::string("/sys/") + MBED_CONF_APP_DECADA_PRODUCT_KEY + "/" + device_uuid + "/thing/measurepoint/post";
 std::string const DECADA_SERVICE_TOPIC = std::string("/sys/") + MBED_CONF_APP_DECADA_PRODUCT_KEY + "/" + device_uuid + "/thing/service/";
 std::string const SENSOR_POLL_RATE_TOPIC = DECADA_SERVICE_TOPIC + "sensorpollrate";
@@ -23,12 +25,14 @@ std::unordered_set<std::string> subscription_topics = {SENSOR_POLL_RATE_TOPIC};
 Thread thread_1_1(osPriorityNormal, OS_STACK_SIZE*3, NULL, "SubscriptionManagerThread");
 
 /* [rtos: thread_1_1] SubscriptionManagerThread */
-void subscription_manager_thread(mqtt_stack* stack) 
+void subscription_manager_thread(DecadaManagerV2* decada_ptr)
 {
     #undef TRACE_GROUP
     #define TRACE_GROUP  "SubscriptionManagerThread"
     
-    const uint32_t submgr_thread_sleep_ms = 10000;
+    const uint32_t submgr_thread_sleep_ms = 1000;
+    mqtt_stack* stack = decada_ptr->GetMqttStackPointer();
+
     while (1)
     {   
         event_flags.wait_all(FLAG_MQTT_OK, osWaitForever, false);
@@ -37,7 +41,7 @@ void subscription_manager_thread(mqtt_stack* stack)
             (*(stack->mqtt_client_ptr))->yield();
             if(!(*(stack->mqtt_client_ptr))->isConnected())
             {
-                ReconnectMqttService(stack->network,*(stack->mqtt_network_ptr),*(stack->mqtt_client_ptr), device_secret, subscription_topics, decada_root_ca, cert, ReadSSLPrivateKey());
+                decada_ptr->Reconnect();
             }
         }
         ThisThread::sleep_for(submgr_thread_sleep_ms);
@@ -55,83 +59,39 @@ void communications_controller_thread(void)
     Watchdog &watchdog = Watchdog::get_instance();
 
     NetworkInterface* network = NULL;
-    MQTTNetwork* mqtt_network = NULL;
-    MQTTNetwork** mqtt_network_ptr = &mqtt_network;
-    MQTT::Client<MQTTNetwork, Countdown>* mqtt_client = NULL;
-    MQTT::Client<MQTTNetwork, Countdown>** mqtt_client_ptr  = &mqtt_client;
-
     std::string payload = "";
 
     bool is_network_connected= ConfigNetworkInterface(network);
     while (!is_network_connected)
     {
-        printf("Network Connection Failed...Retrying...\r\n");
+        tr_info("Network Connection Failed...Retrying...");
         is_network_connected = ConfigNetworkInterface(network);
     }
-    
+    watchdog.kick();
+
     /* Update RTC before first message is sent */
     NTPClient ntp(network);
     UpdateRtc(ntp);
-
-    /* Get DECADA root CA cert */
-    decada_root_ca = GetDecadaRootCA();
-    tr_info("Root CA is retrieved from decada.");
-
-    device_secret = CheckDeviceRegistrationStatus(network);
-    bool first_registration_attempt = true;
-    while (device_secret == "invalid")
-    {
-        if(!first_registration_attempt)
-        {
-            ThisThread::sleep_for(500);
-        }
-        tr_info("Registering Device to DECADA...");
-        device_secret = RegisterDeviceToDecada(network, device_uuid);       // Change `device_uuid` to whatever you woud like the device to be labelled on DECADA Cloud dashboard
-
-        first_registration_attempt = false;
-    }
-    tr_info("Device is registered with DECADA.");
-
-    watchdog.kick(); 
-
-    cert = ReadClientCertificate();
-    if (cert == "" || cert == "invalid" || ReadSSLPrivateKey() == "")
-    {
-        tr_info("Requesting client certificate from DECADA...");
-        cert = ApplyMqttCertificate(network, decada_root_ca);
-        WriteClientCertificate(cert);
-        tr_info("New client certificate is generated.");
-    }
-    else
-    {
-        tr_info("Using existing client certificate.");
-    }
-
-    /* Connect to MQTT */
-    ConnectMqttNetwork(mqtt_network, network, decada_root_ca, cert, ReadSSLPrivateKey());
-    ConnectMqttClient(mqtt_client, mqtt_network, device_secret);
-
     watchdog.kick();
-    
-    mqtt_stack stack;
-    mqtt_stack* stack_ptr = &stack;
-    stack_ptr->mqtt_client_ptr = mqtt_client_ptr;
-    stack_ptr->mqtt_network_ptr = mqtt_network_ptr;
-    stack_ptr->network = network;
+
+    DecadaManagerV2 decada(network);
+    decada.Connect();
+    watchdog.kick();
 
     /* Signal other threads that MQTT is up */ 
     event_flags.set(FLAG_MQTT_OK);
     
-    bool pub_ok = true;
     uint32_t ntp_counter = ntp_counter_max;
+    bool pub_ok = true;
     bool inital_ntp_update = false;
 
-    for(auto& sub_topic : subscription_topics)
+    for(auto& subscription_topic : subscription_topics)
     {
-        MqttSubscribe(mqtt_client, sub_topic.c_str());
+        decada.Subscribe(subscription_topic.c_str());
     }
-    
-    thread_1_1.start(callback(subscription_manager_thread, stack_ptr));
+
+    DecadaManagerV2* decada_ptr = &decada; 
+    thread_1_1.start(callback(subscription_manager_thread, decada_ptr));
 
     while (1)
     {     
@@ -158,7 +118,7 @@ void communications_controller_thread(void)
             free(comms_upstream_mail->payload);
 
             mqtt_mutex.lock();
-            pub_ok = MqttPublish(mqtt_client, SENSOR_PUB_TOPIC.c_str(), payload);
+            pub_ok = decada.Publish(SENSOR_PUB_TOPIC.c_str(), payload);
             mqtt_mutex.unlock();
 
             comms_upstream_mail_box.free(comms_upstream_mail);
@@ -174,7 +134,7 @@ void communications_controller_thread(void)
             free(service_response_mail->service_id);
             std::string response_topic = DECADA_SERVICE_TOPIC + service_id + "_reply";
             mqtt_mutex.lock();
-            pub_ok = MqttPublish(mqtt_client, response_topic.c_str(), payload);
+            pub_ok = decada.Publish(response_topic.c_str(), payload);
             mqtt_mutex.unlock();
 
             service_response_mail_box.free(service_response_mail);
@@ -184,7 +144,7 @@ void communications_controller_thread(void)
         if (pub_ok == false)
         {
             watchdog.kick();
-            ReconnectMqttService(network,mqtt_network, mqtt_client, device_secret, subscription_topics, decada_root_ca, cert, ReadSSLPrivateKey());
+            decada.Reconnect();
         }
         
         watchdog.kick();
