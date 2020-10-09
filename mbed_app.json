@@ -36,7 +36,7 @@
         },
         "decada-api-url": {
             "help": "Root URL to access the APIs of DECADAcloud",
-            "value": "\"https://portal.decada.gov.sg/enosapi\""
+            "value": "\"https://ag.decada.gov.sg\""
         },
         "decada-ou-id": {
             "help": "Organization Unit ID issued for connecting to DECADAcloud",
