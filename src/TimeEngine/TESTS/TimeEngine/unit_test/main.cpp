@@ -3,7 +3,7 @@
 #include "unity/unity.h"
 #include "greentea-client/test_env.h"
 #include "time_engine.h"
-#include "communications_mqtt.h"
+#include "communications_network.h"
 #include "conversions.h"
 
 
