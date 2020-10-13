@@ -131,7 +131,7 @@ void sensor_thread(void)
         }
         poll_counter++;
 
-        if (poll_counter > current_poll_count)
+        if (poll_counter >= current_poll_count)
         {
             poll_counter = 0;
         }
