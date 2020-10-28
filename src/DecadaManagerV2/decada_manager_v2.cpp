@@ -139,7 +139,7 @@ bool DecadaManagerV2::Subscribe(const char* topic)
 }
 
 /**
- *  @brief  Attempt to establish reconnectiong to DECADA. 
+ *  @brief  Attempt to establish reconnecting to DECADA. 
  *  @author Lau Lee Hong
  *  @return Successful(1)/unsuccessful(0)
  */
