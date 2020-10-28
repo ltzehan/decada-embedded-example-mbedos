@@ -107,6 +107,9 @@ Functions</h2></td></tr>
 <tr class="memitem:ga8a9534e6a2f607648ec54e7567a2b8e4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__persist__store.html#ga8a9534e6a2f607648ec54e7567a2b8e4">WriteClientCertificate</a> (const std::string cert)</td></tr>
 <tr class="memdesc:ga8a9534e6a2f607648ec54e7567a2b8e4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writes client certificate to flash memory.  <a href="group__persist__store.html#ga8a9534e6a2f607648ec54e7567a2b8e4">More...</a><br /></td></tr>
 <tr class="separator:ga8a9534e6a2f607648ec54e7567a2b8e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga1f1b885e1356e23900eafb1f9e772d9a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__persist__store.html#ga1f1b885e1356e23900eafb1f9e772d9a">WriteClientCertificateSerialNumber</a> (const std::string cert_sn)</td></tr>
+<tr class="memdesc:ga1f1b885e1356e23900eafb1f9e772d9a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writes client certificate serial number to flash memory.  <a href="group__persist__store.html#ga1f1b885e1356e23900eafb1f9e772d9a">More...</a><br /></td></tr>
+<tr class="separator:ga1f1b885e1356e23900eafb1f9e772d9a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaf6be724451b8ab7eb13516bdfa8a89cb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__persist__store.html#gaf6be724451b8ab7eb13516bdfa8a89cb">WriteSSLPrivateKey</a> (const std::string key)</td></tr>
 <tr class="memdesc:gaf6be724451b8ab7eb13516bdfa8a89cb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writes ssl private key to flash memory.  <a href="group__persist__store.html#gaf6be724451b8ab7eb13516bdfa8a89cb">More...</a><br /></td></tr>
 <tr class="separator:gaf6be724451b8ab7eb13516bdfa8a89cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -134,6 +137,9 @@ Functions</h2></td></tr>
 <tr class="memitem:gace0ebf7b93325ea082f82987fd1887c2"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__persist__store.html#gace0ebf7b93325ea082f82987fd1887c2">ReadClientCertificate</a> (void)</td></tr>
 <tr class="memdesc:gace0ebf7b93325ea082f82987fd1887c2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reads the client certificate from flash memory.  <a href="group__persist__store.html#gace0ebf7b93325ea082f82987fd1887c2">More...</a><br /></td></tr>
 <tr class="separator:gace0ebf7b93325ea082f82987fd1887c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad659155bc6173508ba06b2c2f7252cbc"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__persist__store.html#gad659155bc6173508ba06b2c2f7252cbc">ReadClientCertificateSerialNumber</a> (void)</td></tr>
+<tr class="memdesc:gad659155bc6173508ba06b2c2f7252cbc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reads the client certificate serial number from flash memory.  <a href="group__persist__store.html#gad659155bc6173508ba06b2c2f7252cbc">More...</a><br /></td></tr>
+<tr class="separator:gad659155bc6173508ba06b2c2f7252cbc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gabcb5d6e48d5bdd4eaaf8db85d0d698a6"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__persist__store.html#gabcb5d6e48d5bdd4eaaf8db85d0d698a6">ReadSSLPrivateKey</a> (void)</td></tr>
 <tr class="memdesc:gabcb5d6e48d5bdd4eaaf8db85d0d698a6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reads the ssl private key from flash memory.  <a href="group__persist__store.html#gabcb5d6e48d5bdd4eaaf8db85d0d698a6">More...</a><br /></td></tr>
 <tr class="separator:gabcb5d6e48d5bdd4eaaf8db85d0d698a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -159,6 +165,28 @@ Functions</h2></td></tr>
 <p>Reads the client certificate from flash memory. </p>
 <dl class="section author"><dt>Author</dt><dd>Goh Kok Boon </dd></dl>
 <dl class="section return"><dt>Returns</dt><dd>client certificate in PEM format </dd></dl>
+
+</div>
+</div>
+<a id="gad659155bc6173508ba06b2c2f7252cbc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gad659155bc6173508ba06b2c2f7252cbc">&#9670;&nbsp;</a></span>ReadClientCertificateSerialNumber()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string ReadClientCertificateSerialNumber </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Reads the client certificate serial number from flash memory. </p>
+<dl class="section author"><dt>Author</dt><dd>Lau Lee Hong </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>client certificate serial number </dd></dl>
 
 </div>
 </div>
@@ -386,7 +414,34 @@ Functions</h2></td></tr>
 <dl class="section author"><dt>Author</dt><dd>Goh Kok Boon </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">string</td><td>value of the certificate received from decada </td></tr>
+    <tr><td class="paramname">cert</td><td>value of the certificate received from decada </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ga1f1b885e1356e23900eafb1f9e772d9a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga1f1b885e1356e23900eafb1f9e772d9a">&#9670;&nbsp;</a></span>WriteClientCertificateSerialNumber()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void WriteClientCertificateSerialNumber </td>
+          <td>(</td>
+          <td class="paramtype">const std::string&#160;</td>
+          <td class="paramname"><em>cert_sn</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Writes client certificate serial number to flash memory. </p>
+<dl class="section author"><dt>Author</dt><dd>Lau Lee Hong </dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">cert_sn</td><td>certificate serial number received from decada </td></tr>
   </table>
   </dd>
 </dl>
@@ -440,7 +495,7 @@ Functions</h2></td></tr>
 <dl class="section author"><dt>Author</dt><dd>Goh Kok Boon </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">integer</td><td>value of the cycle interval </td></tr>
+    <tr><td class="paramname">interval</td><td>value of the cycle interval </td></tr>
   </table>
   </dd>
 </dl>
@@ -608,7 +663,7 @@ Functions</h2></td></tr>
 <dl class="section author"><dt>Author</dt><dd>Lau Lee Hong </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">string</td><td>value of the private key generated on device </td></tr>
+    <tr><td class="paramname">key</td><td>value of the private key generated on device </td></tr>
   </table>
   </dd>
 </dl>
