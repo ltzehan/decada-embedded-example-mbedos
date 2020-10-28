@@ -445,7 +445,7 @@ std::pair<std::string, std::string> DecadaManagerV2::RenewClientCertificate(void
 
     Json::Value message_content;
     message_content["certSn"] = StringToInt(ReadClientCertificateSerialNumber());
-    message_content["validDay"] = 3650;
+    message_content["validDay"] = 365;
     Json::StreamWriterBuilder builder;
     builder["indentation"] = "";
     std::string body = Json::writeString(builder, message_content);
