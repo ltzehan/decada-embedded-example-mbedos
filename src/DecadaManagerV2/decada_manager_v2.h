@@ -106,6 +106,7 @@ class DecadaManagerV2 : protected CryptoEngineV2
         bool Publish(const char* topic, std::string payload);
         bool Subscribe(const char* topic);
         bool Reconnect(void);
+        bool RenewCertificate(void);
         mqtt_stack* GetMqttStackPointer(void);
 
     private:
@@ -114,7 +115,8 @@ class DecadaManagerV2 : protected CryptoEngineV2
         std::string GetAccessToken(void);
         std::string CheckDeviceCreation(void);
         std::string CreateDeviceInDecada(std::string default_name);
-        std::string GetClientCertificate(void);
+        std::pair<std::string, std::string> GetClientCertificate(void);
+        std::pair<std::string, std::string> RenewClientCertificate(void);
         
         /* Network Connection */
         bool ConnectMqttNetwork(std::string root_ca, std::string client_cert, std::string private_key);

@@ -54,8 +54,11 @@ bool DecadaManagerV2::Connect(void)
     if (client_cert == "" || client_cert == "invalid" || ReadSSLPrivateKey() == "")
     {
         tr_info("Requesting client certificate from DECADA...");
-        client_cert = GetClientCertificate();
+        const std::pair<std::string, std::string> client_cert_data = GetClientCertificate();
+        client_cert = client_cert_data.first;
+        const std::string client_cert_serial_number = client_cert_data.second;
         WriteClientCertificate(client_cert);
+        WriteClientCertificateSerialNumber(client_cert_serial_number);
         tr_info("New client certificate is generated.");
     }
     else
@@ -146,6 +149,36 @@ bool DecadaManagerV2::Reconnect(void)
     success = success && ReconnectMqttService(GetDecadaRootCertificateAuthority(), ReadClientCertificate(), ReadSSLPrivateKey());
 
     return success;  
+}
+
+/**
+ *  @brief      Renew DECADA Client Certificate.
+ *  @details    This method will invoke a software reset; New bootup will connect to DECADA using the renewed certificate.
+ *  @author     Lau Lee Hong
+ *  @return     true: success, false: failed
+ */
+bool DecadaManagerV2::RenewCertificate(void)
+{
+    tr_debug("Renewing SSL Client Certificate");
+
+    const std::pair<std::string, std::string> client_cert_data = RenewClientCertificate();
+    const std::string client_cert = client_cert_data.first;
+    const std::string client_cert_serial_number = client_cert_data.second;
+
+    if ((client_cert != "invalid") && (client_cert_serial_number != "invalid"))
+    {
+        WriteClientCertificate(client_cert_data.first);
+        WriteClientCertificateSerialNumber(client_cert_data.second);
+        
+        tr_warn("Client Certificate has been renewed; System will reset.");
+        NVIC_SystemReset();
+
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 }
 
 /**
@@ -336,9 +369,9 @@ std::string DecadaManagerV2::CreateDeviceInDecada(std::string default_name)
  *  @brief      RESTful call to do x509 exchange to attain SSL client certificate.
  *  @details    The client certificate is a key parameter required for establishing a MQTT connection with decada.
  *  @author     Lau Lee Hong
- *  @return     ssl client certificate
+ *  @return     <ssl client certificate, ssl client certificate serial number>
  */
-std::string DecadaManagerV2::GetClientCertificate(void)
+std::pair<std::string, std::string> DecadaManagerV2::GetClientCertificate(void)
 {    
     const std::string timestamp_ms = MsPaddingIntToString(RawRtcTimeNow());
     const std::string access_token = GetAccessToken();
@@ -376,7 +409,7 @@ std::string DecadaManagerV2::GetClientCertificate(void)
     {
         delete request;
         tr_warn("GetClientCertificate request failed (status code %d)", response->get_status_code());
-        return "invalid";   
+        return std::make_pair("invalid", "invalid");  
     }
     else
     {
@@ -388,9 +421,71 @@ std::string DecadaManagerV2::GetClientCertificate(void)
         reader.parse(res_string, root, false);
         sub_root = root.get("data", "invalid");
         std::string decada_cert = sub_root.get("cert", "invalid").asString();
+        std::string decada_cert_serial_number = sub_root.get("certSN", "invalid").asString();
 
         delete request;
-        return decada_cert;
+        return std::make_pair(decada_cert, decada_cert_serial_number);
+    }
+}
+
+/**
+ *  @brief      RESTful call to renew the existing SSL client certificate with a new certificate.
+ *  @details    The client certificate is a key parameter required for establishing a MQTT connection with decada.
+ *  @author     Lau Lee Hong
+ *  @return     Refreshed <ssl client certificate, ssl client certificate serial number>
+ */
+std::pair<std::string, std::string> DecadaManagerV2::RenewClientCertificate(void)
+{  
+    const std::string timestamp_ms = MsPaddingIntToString(RawRtcTimeNow());
+    const std::string access_token = GetAccessToken();
+    const std::string http_post_frame = "actionrenew";
+    
+    Watchdog &watchdog = Watchdog::get_instance();
+    watchdog.kick();
+
+    Json::Value message_content;
+    message_content["certSn"] = StringToInt(ReadClientCertificateSerialNumber());
+    message_content["validDay"] = 3650;
+    Json::StreamWriterBuilder builder;
+    builder["indentation"] = "";
+    std::string body = Json::writeString(builder, message_content);
+    const char* body_sanitized = (char*)body.c_str();
+
+    /* Sort parameters in ASCII order */
+    const std::string parameters = http_post_frame + "deviceKey" + GetDeviceUid() + "orgId" + decada_ou_id_ + "productKey" + decada_product_key_+ body_sanitized;
+    const std::string signing_params = access_token + parameters + timestamp_ms + decada_access_secret_;
+    const std::string signature = ToLowerCase(GenericSHA256Generator(signing_params));
+
+    const std::string request_uri = "/connect-service/v2.0/certificates?action=renew&orgId=" + decada_ou_id_
+                                    + "&productKey=" + decada_product_key_
+                                    + "&deviceKey=" + GetDeviceUid();
+    HttpsRequest* request = new HttpsRequest(network_, SSL_CA_STORE_PEM, HTTP_POST, (api_url_ + request_uri).c_str());
+    request->set_header("Content-Type", "application/json;charset=UTF-8");
+    request->set_header("apim-accesstoken", access_token);
+    request->set_header("apim-signature", signature);
+    request->set_header("apim-timestamp", timestamp_ms);
+
+    HttpResponse* response = request->send(body_sanitized, strlen(body_sanitized));
+    if (!response) 
+    {
+        delete request;
+        tr_warn("GetClientCertificate request failed (status code %d)", response->get_status_code());
+        return std::make_pair("invalid", "invalid");  
+    }
+    else
+    {
+        std::string res_string = response->get_body_as_string();
+        tr_debug("renew client cert: %s", res_string.c_str());
+        Json::Reader reader;
+        Json::Value root;
+        Json::Value sub_root;
+        reader.parse(res_string, root, false);
+        sub_root = root.get("data", "invalid");
+        std::string renewed_decada_cert = sub_root.get("cert", "invalid").asString();
+        std::string renewed_decada_cert_serial_number = sub_root.get("certSN", "invalid").asString();
+
+        delete request;
+        return std::make_pair(renewed_decada_cert, renewed_decada_cert_serial_number);
     }
 }
 
