@@ -11,10 +11,10 @@
 RawSerial pc(USBTX, USBRX, 115200);
 
 const uint8_t boot_timeout_sec = 5;    
-const std::string sdk_ver = "2.0.0";
+const std::string sdk_ver = "2.1.0";
 const uint8_t max_login_attempts = 3;
 const std::string poll_rate_ms = "10000";
-const std::string boot_login_pw = "stackx2019";
+const std::string boot_login_pw = "stack2020";
 const std::string uuid = GetDeviceUid();
 
 std::string wifi_ssid = ReadWifiSsid();
@@ -142,6 +142,7 @@ void RunBootManager(void)
         {
             WriteSSLPrivateKey("");
             WriteClientCertificate("");
+            WriteClientCertificateSerialNumber("");
             pc.printf("DECADA MQTT Certificate & Key Cleared.\r\n");
         }
         else
@@ -226,7 +227,7 @@ std::string GetUserInputString(bool is_hidden)
 
 /**
  *  @brief  Sets configuration parameters to default values
- *  @author Ng Tze Yang
+ *  @author Ng Tze Yang, Lau Lee Hong
  */
 void SetDefaultConfig(void)
 {
@@ -234,6 +235,7 @@ void SetDefaultConfig(void)
     WriteWifiPass("WIFI_PW");
     WriteSSLPrivateKey("");
     WriteClientCertificate("");
+    WriteClientCertificateSerialNumber("");
 }
 
 /**

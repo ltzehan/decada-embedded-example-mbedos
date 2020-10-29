@@ -34,6 +34,7 @@ namespace PersistKey
 
     /* SSL Certificate Storage */
     KeyName CLIENT_CERTIFICATE =            {"client_certificate"};
+    KeyName CLIENT_CERTIFICATE_SN =         {"client_certificate_sn"};
     KeyName SSL_PRIVATE_KEY =               {"ssl_private_key"};    
 }
 
@@ -138,7 +139,7 @@ void WriteWifiPass(const std::string pass)
 /**
  *  @brief  Writes scheduler cycle interval(seconds) to flash memory.
  *  @author Goh Kok Boon
- *  @param  integer value of the cycle interval
+ *  @param  interval value of the cycle interval
  */
 void WriteCycleInterval(const std::string interval)
 {
@@ -151,7 +152,7 @@ void WriteCycleInterval(const std::string interval)
 /**
  *  @brief  Writes client certificate to flash memory.
  *  @author Goh Kok Boon
- *  @param  string value of the certificate received from decada
+ *  @param  cert value of the certificate received from decada
  */
 void WriteClientCertificate(const std::string cert)
 {
@@ -162,9 +163,22 @@ void WriteClientCertificate(const std::string cert)
 }
 
 /**
+ *  @brief  Writes client certificate serial number to flash memory.
+ *  @author Lau Lee Hong
+ *  @param  cert_sn certificate serial number received from decada
+ */
+void WriteClientCertificateSerialNumber(const std::string cert_sn)
+{
+    WriteKey(
+        PersistKey::CLIENT_CERTIFICATE_SN,
+        cert_sn
+    );
+}
+
+/**
  *  @brief  Writes ssl private key to flash memory.
  *  @author Lau Lee Hong
- *  @param  string value of the private key generated on device
+ *  @param  key value of the private key generated on device
  */
 void WriteSSLPrivateKey(const std::string key)
 {
@@ -271,6 +285,17 @@ std::string ReadClientCertificate(void)
 {
     std::string client_cert = ReadKey(PersistKey::CLIENT_CERTIFICATE);
     return client_cert;
+}
+
+/**
+ *  @brief  Reads the client certificate serial number from flash memory.
+ *  @author Lau Lee Hong
+ *  @return client certificate serial number
+ */
+std::string ReadClientCertificateSerialNumber(void)
+{
+    std::string client_cert_serial_number = ReadKey(PersistKey::CLIENT_CERTIFICATE_SN);
+    return client_cert_serial_number;
 }
 
 /**

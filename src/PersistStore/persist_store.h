@@ -1,5 +1,5 @@
 /*******************************************************************************************************
- * Copyright (c) 2018-2019 Government Technology Agency of Singapore (GovTech)
+ * Copyright (c) 2018-2020 Government Technology Agency of Singapore (GovTech)
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -28,6 +28,7 @@ void WriteWifiSsid(const std::string ssid);
 void WriteWifiPass(const std::string pass);
 void WriteCycleInterval(const std::string interval);
 void WriteClientCertificate(const std::string cert);
+void WriteClientCertificateSerialNumber(const std::string cert_sn);
 void WriteSSLPrivateKey(const std::string key);
 
 PersistConfig ReadConfig(void);
@@ -38,6 +39,7 @@ std::string ReadWifiSsid(void);
 std::string ReadWifiPass(void);
 std::string ReadCycleInterval(void);
 std::string ReadClientCertificate(void);
+std::string ReadClientCertificateSerialNumber(void);
 std::string ReadSSLPrivateKey(void);
 
 #endif // PERSIST_STORE_H

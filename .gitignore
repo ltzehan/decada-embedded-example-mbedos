@@ -88,3 +88,6 @@ mbed_settings.py
 
 # SonarQube
 sonar-project.properties
+
+# Directory
+.DS_Store

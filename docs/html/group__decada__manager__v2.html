@@ -81,8 +81,11 @@ Functions</h2></td></tr>
 <tr class="memdesc:gada763b316e186b74442fb743ee42c995"><td class="mdescLeft">&#160;</td><td class="mdescRight">Subscribe to the MQTT topic.  <a href="group__decada__manager__v2.html#gada763b316e186b74442fb743ee42c995">More...</a><br /></td></tr>
 <tr class="separator:gada763b316e186b74442fb743ee42c995"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga0a5edda4d7dd8647ab09396b67ab8fa1"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__decada__manager__v2.html#ga0a5edda4d7dd8647ab09396b67ab8fa1">DecadaManagerV2::Reconnect</a> (void)</td></tr>
-<tr class="memdesc:ga0a5edda4d7dd8647ab09396b67ab8fa1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Attempt to establish reconnectiong to DECADA.  <a href="group__decada__manager__v2.html#ga0a5edda4d7dd8647ab09396b67ab8fa1">More...</a><br /></td></tr>
+<tr class="memdesc:ga0a5edda4d7dd8647ab09396b67ab8fa1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Attempt to re-establish connection to DECADA.  <a href="group__decada__manager__v2.html#ga0a5edda4d7dd8647ab09396b67ab8fa1">More...</a><br /></td></tr>
 <tr class="separator:ga0a5edda4d7dd8647ab09396b67ab8fa1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gadbca03a31b4aa095b1980275d34d0f81"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__decada__manager__v2.html#gadbca03a31b4aa095b1980275d34d0f81">DecadaManagerV2::RenewCertificate</a> (void)</td></tr>
+<tr class="memdesc:gadbca03a31b4aa095b1980275d34d0f81"><td class="mdescLeft">&#160;</td><td class="mdescRight">Renew DECADA Client Certificate.  <a href="group__decada__manager__v2.html#gadbca03a31b4aa095b1980275d34d0f81">More...</a><br /></td></tr>
+<tr class="separator:gadbca03a31b4aa095b1980275d34d0f81"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga3ba0db8d914856322eaa3bd9932c34dd"><td class="memItemLeft" align="right" valign="top">mqtt_stack *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__decada__manager__v2.html#ga3ba0db8d914856322eaa3bd9932c34dd">DecadaManagerV2::GetMqttStackPointer</a> (void)</td></tr>
 <tr class="memdesc:ga3ba0db8d914856322eaa3bd9932c34dd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns mqtt stack pointers, to pass to another thread.  <a href="group__decada__manager__v2.html#ga3ba0db8d914856322eaa3bd9932c34dd">More...</a><br /></td></tr>
 <tr class="separator:ga3ba0db8d914856322eaa3bd9932c34dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -188,9 +191,31 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Attempt to establish reconnectiong to DECADA. </p>
+<p>Attempt to re-establish connection to DECADA. </p>
 <dl class="section author"><dt>Author</dt><dd>Lau Lee Hong </dd></dl>
 <dl class="section return"><dt>Returns</dt><dd>Successful(1)/unsuccessful(0) </dd></dl>
+
+</div>
+</div>
+<a id="gadbca03a31b4aa095b1980275d34d0f81"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gadbca03a31b4aa095b1980275d34d0f81">&#9670;&nbsp;</a></span>RenewCertificate()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool DecadaManagerV2::RenewCertificate </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Renew DECADA Client Certificate. </p>
+<p>This method will invoke a software reset; New bootup will connect to DECADA using the renewed certificate. </p><dl class="section author"><dt>Author</dt><dd>Lau Lee Hong </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>true: success, false: failed </dd></dl>
 
 </div>
 </div>
