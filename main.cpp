@@ -24,8 +24,8 @@
 #include "device_uid.h"
 #include "persist_store.h"
 
-#if (MBED_MAJOR_VERSION != 5 || MBED_MINOR_VERSION != 14 || MBED_PATCH_VERSION != 2)
-#error "MBed OS version is not targeted 5.14.2"
+#if (MBED_MAJOR_VERSION != 6 || MBED_MINOR_VERSION != 5 || MBED_PATCH_VERSION != 0)
+#error "MBed OS version is not targeted 6.5"
 #endif  // mbed-os version check
 
 #define ONE_SEC_IN_MS   1000

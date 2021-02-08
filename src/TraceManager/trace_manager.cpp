@@ -60,14 +60,14 @@ void DecadaServiceResponse(std::string service_id, std::string msg_id, std::stri
     {
         service_response_mail = service_response_mail_box.calloc();
         tr_warn("Memory full. NULL pointer allocated");
-        wait(0.5); 
+        ThisThread::sleep_for(500); 
     }
     
     service_response_mail->response = StringToChar(snon);
     service_response_mail->service_id = StringToChar(service_id);
     service_response_mail_box.put(service_response_mail);
 
-    wait(0.1);
+    ThisThread::sleep_for(100);
     return;
 }
 

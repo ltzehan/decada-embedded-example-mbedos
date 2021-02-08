@@ -57,6 +57,7 @@ public:
         _error = 0;
         _response = NULL;
 
+        _network = network;
         _parsed_url = new ParsedUrl(url);
         _request_builder = new HttpRequestBuilder(method, _parsed_url);
 
@@ -93,7 +94,11 @@ public:
 protected:
 
     virtual nsapi_error_t connect_socket(char *host, uint16_t port) {
-        return ((TCPSocket*)_socket)->connect(host, port);
+        SocketAddress socketAddress;
+        _network->gethostbyname(host, &socketAddress);
+        socketAddress.set_port(port);
+
+        return ((TCPSocket*)_socket)->connect(socketAddress);
     }
 };
 

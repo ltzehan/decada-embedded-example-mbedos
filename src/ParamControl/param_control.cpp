@@ -26,7 +26,7 @@ void DistributeControlMessage (std::string param, int value, std::string msg_id,
         {
             sensor_control_mail = sensor_control_mail_box.calloc();
             tr_warn("Memory full. NULL pointer allocated");
-            wait(0.5);
+            ThisThread::sleep_for(500);
         }
         
         sensor_control_mail->param = StringToChar(param);
@@ -35,7 +35,7 @@ void DistributeControlMessage (std::string param, int value, std::string msg_id,
         sensor_control_mail->endpoint_id = StringToChar(endpoint_id);
         sensor_control_mail_box.put(sensor_control_mail);
         
-        wait(0.1);
+        ThisThread::sleep_for(100);
     }
 }
 

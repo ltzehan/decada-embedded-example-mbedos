@@ -8,10 +8,10 @@
 #include "global_params.h"
 #include "persist_store.h"
 
-RawSerial pc(USBTX, USBRX, 115200);
+UnbufferedSerial pc(USBTX, USBRX, 115200);
 
 const uint8_t boot_timeout_sec = 5;    
-const std::string sdk_ver = "2.1.0";
+const std::string sdk_ver = "3.0.0";
 const uint8_t max_login_attempts = 3;
 const std::string poll_rate_ms = "10000";
 const std::string boot_login_pw = "stack2020";
@@ -29,13 +29,13 @@ std::string user_input = "";
  */
 void PrintHeader(void)
 {
-    pc.printf("\r-----------------------------------------------------\r\n");
-    pc.printf("\r  ____   ____   _____         _       ____  _             _    \r\n");
-    pc.printf("\r / ___| / ___| |_   _|__  ___| |__   / ___|| |_ __ _  ___| | __\r\n");
-    pc.printf("\r \\___ \\| |  _    | |/ _ \\/ __| '_ \\  \\___ \\| __/ _` |/ __| |/ /\r\n");
-    pc.printf("\r  ___) | |_| |   | |  __/ (__| | | |  ___) | || (_| | (__|   < \r\n");
-    pc.printf("\r |____/ \\____|   |_|\\___|\\___|_| |_| |____/ \\__\\__,_|\\___|_|\\_\\\r\n");
-    pc.printf("\r\nsdk v%s \r\n\r\n", sdk_ver.c_str());
+    printf("\r-----------------------------------------------------\r\n");
+    printf("\r  ____   ____   _____         _       ____  _             _    \r\n");
+    printf("\r / ___| / ___| |_   _|__  ___| |__   / ___|| |_ __ _  ___| | __\r\n");
+    printf("\r \\___ \\| |  _    | |/ _ \\/ __| '_ \\  \\___ \\| __/ _` |/ __| |/ /\r\n");
+    printf("\r  ___) | |_| |   | |  __/ (__| | | |  ___) | || (_| | (__|   < \r\n");
+    printf("\r |____/ \\____|   |_|\\___|\\___|_| |_| |____/ \\__\\__,_|\\___|_|\\_\\\r\n");
+    printf("\r\nsdk v%s \r\n\r\n", sdk_ver.c_str());
 }
 
 /**
@@ -50,18 +50,18 @@ void PrintMenu(void)
     std::string censored_wifi_pass = ReadWifiPass();
     censored_wifi_pass.replace(1, censored_wifi_pass.length()-2, censored_wifi_pass.length()-2, '*');
     
-    pc.printf("\ruuid %s \r\n", uuid.c_str());
-    pc.printf("\r-----------------------------------------------------\r\n");
-    pc.printf("(1) WIFI SSID \t\t\t\t %s\r\n", ReadWifiSsid().c_str());
-    pc.printf("\r-----------------------------------------------------\r\n");
-    pc.printf("(2) WIFI Password: \t\t\t %s\r\n", censored_wifi_pass.c_str());
-    pc.printf("\r-----------------------------------------------------\r\n");
-    pc.printf("(3) Clear DECADA MQTT Certificate & Key\r\n");
-    pc.printf("\r-----------------------------------------------------\r\n");
-    pc.printf("(-1) Reset All to Defaults\r\n");
-    pc.printf("\r-----------------------------------------------------\r\n");
-    pc.printf("(-2) Save & Quit Bootmanager\r\n");
-    pc.printf("\r-----------------------------------------------------\r\n");
+    printf("\ruuid %s \r\n", uuid.c_str());
+    printf("\r-----------------------------------------------------\r\n");
+    printf("(1) WIFI SSID \t\t\t\t %s\r\n", ReadWifiSsid().c_str());
+    printf("\r-----------------------------------------------------\r\n");
+    printf("(2) WIFI Password: \t\t\t %s\r\n", censored_wifi_pass.c_str());
+    printf("\r-----------------------------------------------------\r\n");
+    printf("(3) Clear DECADA MQTT Certificate & Key\r\n");
+    printf("\r-----------------------------------------------------\r\n");
+    printf("(-1) Reset All to Defaults\r\n");
+    printf("\r-----------------------------------------------------\r\n");
+    printf("(-2) Save & Quit Bootmanager\r\n");
+    printf("\r-----------------------------------------------------\r\n");
 }
 
 /**
@@ -80,7 +80,7 @@ bool EnterBootManager(void)
         /* Launch BootManager*/
         if (pc.readable())
         {
-            char c = pc.getc();
+            char c = getchar();
             boot = true;
             break;
         }
@@ -120,7 +120,7 @@ void RunBootManager(void)
         /* Quit Bootmanager */
         if (user_input == "-2")
         {
-            pc.printf("End of configuration. MANUCA OS will restart.\r\n\r\n");
+            printf("End of configuration. MANUCA OS will restart.\r\n\r\n");
             NVIC_SystemReset();
         }
         /* Reset Defaults */
@@ -130,12 +130,12 @@ void RunBootManager(void)
         }
         else if (user_input == "1") 
         {
-            pc.printf("Choose new WIFI SSID:\r\n");
+            printf("Choose new WIFI SSID:\r\n");
             WriteWifiSsid(GetUserInputString());
         }
         else if (user_input == "2") 
         {
-            pc.printf("Choose new WIFI Password:\r\n");
+            printf("Choose new WIFI Password:\r\n");
             WriteWifiPass(GetUserInputString(true));
         }
         else if (user_input == "3") 
@@ -143,11 +143,11 @@ void RunBootManager(void)
             WriteSSLPrivateKey("");
             WriteClientCertificate("");
             WriteClientCertificateSerialNumber("");
-            pc.printf("DECADA MQTT Certificate & Key Cleared.\r\n");
+            printf("DECADA MQTT Certificate & Key Cleared.\r\n");
         }
         else
         {
-            pc.printf("Invalid choice \"%s\". Try again...\r\n",user_input.c_str());
+            printf("Invalid choice \"%s\". Try again...\r\n",user_input.c_str());
         }
     }
 }
@@ -170,16 +170,16 @@ void BootManagerLogin(void)
 {
     for (int i=max_login_attempts; i>0; i--)
     {
-        pc.printf("Enter passphrase (%d attempts left): \r\n", i);
+        printf("Enter passphrase (%d attempts left): \r\n", i);
         user_input = GetUserInputString(true);
         if (user_input == boot_login_pw)
         {
-            pc.printf("\r\nLogin successful.\r\n");
+            printf("\r\nLogin successful.\r\n");
             return;
         }
-        pc.printf("\r\nWrong Passphrase.\r\n");
+        printf("\r\nWrong Passphrase.\r\n");
     }
-    pc.printf("\r\nOS Locked\r\n");
+    printf("\r\nOS Locked\r\n");
     while(1);
 }
 
@@ -193,28 +193,28 @@ std::string GetUserInputString(bool is_hidden)
     std::string input = "";
     while (true)
     {
-        char c = pc.getc();
+        char c = getchar();
         /* Do not show passwords typed on screen */
-        if (is_hidden)
-        {
-            if (c == '\b') 
-            {
-                pc.printf("%c",c);
+        if (c == '\b') {
+            // printf("%c",c);
+            printf("\b \b");
+        }
+        else {
+            if (is_hidden) {
+                printf("*");
             }
-            else
-            {
-                pc.printf("*");
+            else {
+                printf("%c", c);
             }
         }
-        else
-        {
-            pc.printf("%c", c);
-        }
-        if (c == '\r') // User presses 'Enter'
+
+        /* User presses Enter */
+        if (c == '\r' || c == '\n')
         {
             return input;   
         }
-        else if (c == '\b')    // Backspace      
+        /* User presses Backspace */
+        else if (c == '\b')
         {
             input = input.substr(0, input.size()-1);
         }
@@ -246,8 +246,8 @@ void WirelessModuleReset(void)
 {
     DigitalOut wifireset(PF_11);
     wifireset = 0;
-    wait(1);
+    ThisThread::sleep_for(1000);
     wifireset = 1;
-    wait(1);
+    ThisThread::sleep_for(1000);
 }
 /** @}*/
