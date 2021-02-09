@@ -7,10 +7,11 @@
 #include "device_uid.h"
 #include "global_params.h"
 #include "persist_store.h"
+#include <chrono>
 
 UnbufferedSerial pc(USBTX, USBRX, 115200);
 
-const uint8_t boot_timeout_sec = 5;    
+const chrono::seconds boot_timeout = 5s;    
 const std::string sdk_ver = "3.0.0";
 const uint8_t max_login_attempts = 3;
 const std::string poll_rate_ms = "10000";
@@ -85,7 +86,7 @@ bool EnterBootManager(void)
             break;
         }
         /* Normal Operation */
-        if (t.read() > boot_timeout_sec)
+        if (t.elapsed_time() > boot_timeout)
         {
             break;    
         }
@@ -246,8 +247,8 @@ void WirelessModuleReset(void)
 {
     DigitalOut wifireset(PF_11);
     wifireset = 0;
-    ThisThread::sleep_for(1000);
+    ThisThread::sleep_for(1s);
     wifireset = 1;
-    ThisThread::sleep_for(1000);
+    ThisThread::sleep_for(1s);
 }
 /** @}*/

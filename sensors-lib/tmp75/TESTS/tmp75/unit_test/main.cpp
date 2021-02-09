@@ -182,7 +182,7 @@ static control_t tmp_config_test_2(const size_t call_count)
     tmp_test.Enable();
     int na = tmp_test.Configure(t_low, t_high);
 
-    wait(1);
+    ThisThread::sleep_for(1s);
     int ret = tmp_test.GetData(data_list);
     if (ret == Tmp75::DATA_OK)
     {
@@ -233,7 +233,7 @@ static control_t tmp_config_test_3(const size_t call_count)
     tmp_test.Enable();
     int na = tmp_test.Configure(t_low, t_high);
 
-    wait(1);
+    ThisThread::sleep_for(1s);
     int ret = tmp_test.GetData(data_list);
     if (ret == Tmp75::DATA_OK)
     {

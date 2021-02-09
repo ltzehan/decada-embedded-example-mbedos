@@ -30,7 +30,7 @@ void subscription_manager_thread(DecadaManagerV2* decada_ptr)
     #undef TRACE_GROUP
     #define TRACE_GROUP  "SubscriptionManagerThread"
     
-    const uint32_t submgr_thread_sleep_ms = 1000;
+    const chrono::milliseconds SUBMGR_THREAD_SLEEP_MS = 1000ms;
     mqtt_stack* stack = decada_ptr->GetMqttStackPointer();
 
     while (1)
@@ -44,7 +44,7 @@ void subscription_manager_thread(DecadaManagerV2* decada_ptr)
                 decada_ptr->Reconnect();
             }
         }
-        ThisThread::sleep_for(submgr_thread_sleep_ms);
+        ThisThread::sleep_for(SUBMGR_THREAD_SLEEP_MS);
     }
 }
 
@@ -110,10 +110,9 @@ void communications_controller_thread(void)
             ntp_counter++;
         }
         
-        osEvent evt = comms_upstream_mail_box.get(1);
-        if (evt.status == osEventMail) 
+        comms_upstream_mail_t *comms_upstream_mail = comms_upstream_mail_box.try_get_for(chrono::milliseconds(1));
+        if (comms_upstream_mail) 
         {
-            comms_upstream_mail_t *comms_upstream_mail = (comms_upstream_mail_t*) evt.value.p;
             payload = comms_upstream_mail->payload;
             free(comms_upstream_mail->payload);
 
@@ -124,10 +123,9 @@ void communications_controller_thread(void)
             comms_upstream_mail_box.free(comms_upstream_mail);
         }
 
-        evt = service_response_mail_box.get(1);
-        if (evt.status == osEventMail) 
+        service_response_mail_t *service_response_mail = service_response_mail_box.try_get_for(chrono::milliseconds(1));
+        if (service_response_mail) 
         {
-            service_response_mail_t *service_response_mail = (service_response_mail_t*) evt.value.p;
             payload = service_response_mail->response;
             free(service_response_mail->response);
             std::string service_id = service_response_mail->service_id;
@@ -148,7 +146,7 @@ void communications_controller_thread(void)
         }
         
         watchdog.kick();
-        ThisThread::sleep_for(comms_thread_sleep_ms);
+        ThisThread::sleep_for(chrono::milliseconds(comms_thread_sleep_ms));
     }
 }
 

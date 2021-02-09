@@ -58,12 +58,12 @@ void SubscriptionMessageArrivalCallback(MQTT::MessageData& md)
     {
         tr_info("service identifier: %s, message_id: %s, param: %s, value: %s", endpoint_id.c_str(), msg_id.c_str(), it.first.c_str(), it.second.c_str());
 
-        mqtt_arrived_mail_t *mqtt_arrived_mail = mqtt_arrived_mail_box.calloc();
+        mqtt_arrived_mail_t *mqtt_arrived_mail = mqtt_arrived_mail_box.try_calloc();
         while (mqtt_arrived_mail == NULL)
         {
-            mqtt_arrived_mail = mqtt_arrived_mail_box.calloc();
+            mqtt_arrived_mail = mqtt_arrived_mail_box.try_calloc();
             tr_warn("Memory full. NULL pointer allocated");
-            ThisThread::sleep_for(500);
+            ThisThread::sleep_for(500ms);
         }
 
         mqtt_arrived_mail->endpoint_id = StringToChar(endpoint_id);
