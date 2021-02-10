@@ -63,7 +63,7 @@ typedef struct limits
 	limits()
 	{
 		MAX_MQTT_PACKET_SIZE = 100;
-		MAX_MESSAGE_HANDLERS = 5;
+		MAX_MESSAGE_HANDLERS = 10;
 		MAX_CONCURRENT_OPERATIONS = 1; // 1 indicates single-threaded mode - set to >1 for multithreaded mode
 		command_timeout_ms = 30000;
 	}

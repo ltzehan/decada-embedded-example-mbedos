@@ -30,7 +30,7 @@ void subscription_manager_thread(DecadaManagerV2* decada_ptr)
     #undef TRACE_GROUP
     #define TRACE_GROUP  "SubscriptionManagerThread"
     
-    const uint32_t submgr_thread_sleep_ms = 1000;
+    const chrono::milliseconds submgr_thread_sleep_ms = 1000ms;
     mqtt_stack* stack = decada_ptr->GetMqttStackPointer();
 
     while (1)
@@ -54,7 +54,7 @@ void communications_controller_thread(void)
     #undef TRACE_GROUP
     #define TRACE_GROUP  "CommunicationsControllerThread"
     
-    const uint32_t comms_thread_sleep_ms = 500;
+    const chrono::milliseconds comms_thread_sleep_ms = 500ms;
     const uint32_t ntp_counter_max = 14400000;      // (comms_thread_sleep_ms)*(ntp_counter_max) = 4 hours 
     Watchdog &watchdog = Watchdog::get_instance();
 
@@ -110,10 +110,9 @@ void communications_controller_thread(void)
             ntp_counter++;
         }
         
-        osEvent evt = comms_upstream_mail_box.get(1);
-        if (evt.status == osEventMail) 
+        comms_upstream_mail_t *comms_upstream_mail = comms_upstream_mail_box.try_get_for(1ms);
+        if (comms_upstream_mail) 
         {
-            comms_upstream_mail_t *comms_upstream_mail = (comms_upstream_mail_t*) evt.value.p;
             payload = comms_upstream_mail->payload;
             free(comms_upstream_mail->payload);
 
@@ -124,10 +123,9 @@ void communications_controller_thread(void)
             comms_upstream_mail_box.free(comms_upstream_mail);
         }
 
-        evt = service_response_mail_box.get(1);
-        if (evt.status == osEventMail) 
+        service_response_mail_t *service_response_mail = service_response_mail_box.try_get_for(1ms);
+        if (service_response_mail) 
         {
-            service_response_mail_t *service_response_mail = (service_response_mail_t*) evt.value.p;
             payload = service_response_mail->response;
             free(service_response_mail->response);
             std::string service_id = service_response_mail->service_id;

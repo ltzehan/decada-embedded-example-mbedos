@@ -40,7 +40,7 @@ bool DecadaManagerV2::Connect(void)
     {
         if(!first_registration_attempt)
         {
-            ThisThread::sleep_for(500);
+            ThisThread::sleep_for(500ms);
         }
         tr_info("Creating device in DECADA...");
         device_secret_ = CreateDeviceInDecada("core-" + device_uuid);

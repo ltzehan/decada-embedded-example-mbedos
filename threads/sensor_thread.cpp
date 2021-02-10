@@ -23,10 +23,9 @@ void execute_sensor_control(int& current_cycle_interval)
     #define TRACE_GROUP "SensorThread"
 
     /* Timeout set to 1 ms */ 
-    osEvent evt = sensor_control_mail_box.get(1);
-    if (evt.status == osEventMail)
+    sensor_control_mail_t *sensor_control_mail = sensor_control_mail_box.try_get_for(1ms);
+    if (sensor_control_mail)
     {
-        sensor_control_mail_t *sensor_control_mail = (sensor_control_mail_t *)evt.value.p;
         std::string param = sensor_control_mail->param;
         free(sensor_control_mail->param);
         int value = sensor_control_mail->value;
@@ -55,7 +54,7 @@ void sensor_thread(void)
     #undef TRACE_GROUP
     #define TRACE_GROUP  "SensorThread"
 
-    const int sensor_thread_sleep_ms = 1000;
+    const chrono::milliseconds sensor_thread_sleep_ms = 1000ms;
         
     const PinName i2c_data_pin = PinName::PB_9;
     const PinName i2c_clk_pin = PinName::PB_6;
@@ -63,7 +62,7 @@ void sensor_thread(void)
     Watchdog &watchdog = Watchdog::get_instance();
 
     int current_cycle_interval = StringToInt(ReadCycleInterval());
-    int current_poll_count = current_cycle_interval / sensor_thread_sleep_ms;
+    int current_poll_count = current_cycle_interval / sensor_thread_sleep_ms.count();
     int poll_counter = 0;
 
     Tmp75 onboard_temp_sensor(i2c_data_pin, i2c_clk_pin);
@@ -74,17 +73,17 @@ void sensor_thread(void)
         /* Wait for MQTT connection to be up before continuing */
         event_flags.wait_all(FLAG_MQTT_OK, osWaitForever, false);
 
-        current_poll_count = current_cycle_interval / sensor_thread_sleep_ms;
+        current_poll_count = current_cycle_interval / sensor_thread_sleep_ms.count();
 
         if (poll_counter == 0)
         {
             /* Start of sensor data stream - Add header */
-            llp_sensor_mail_t * llp_mail = llp_sensor_mail_box.calloc();
+            llp_sensor_mail_t * llp_mail = llp_sensor_mail_box.try_calloc();
             while (llp_mail == NULL)
             {
-                llp_mail = llp_sensor_mail_box.calloc();
+                llp_mail = llp_sensor_mail_box.try_calloc();
                 tr_warn("Memory full. NULL pointer allocated");
-                ThisThread::sleep_for(500);
+                ThisThread::sleep_for(500ms);
             }
             llp_mail->sensor_type = StringToChar("header");
             llp_mail->value = StringToChar("start");
@@ -101,12 +100,12 @@ void sensor_thread(void)
                 
             if (stat == SensorType::DATA_OK)
             {   
-                llp_mail = llp_sensor_mail_box.calloc();
+                llp_mail = llp_sensor_mail_box.try_calloc();
                 while (llp_mail == NULL)
                 {
-                    llp_mail = llp_sensor_mail_box.calloc();
+                    llp_mail = llp_sensor_mail_box.try_calloc();
                     tr_warn("Memory full. NULL pointer allocated");
-                    ThisThread::sleep_for(500);
+                    ThisThread::sleep_for(500ms);
                 }      
                 llp_mail->sensor_type = StringToChar(s_data[0].first);
                 llp_mail->value = StringToChar(s_data[0].second);
@@ -117,12 +116,12 @@ void sensor_thread(void)
             /* Poll other sensors here */
 
             /* End of sensor data stream  - Add footer */
-            llp_mail = llp_sensor_mail_box.calloc();
+            llp_mail = llp_sensor_mail_box.try_calloc();
             while (llp_mail == NULL)
             {
-                llp_mail = llp_sensor_mail_box.calloc();
+                llp_mail = llp_sensor_mail_box.try_calloc();
                 tr_warn("Memory full. NULL pointer allocated");
-                ThisThread::sleep_for(500);
+                ThisThread::sleep_for(500ms);
             }
             llp_mail->sensor_type = StringToChar("header");
             llp_mail->value = StringToChar("end");

@@ -38,15 +38,24 @@ public:
 
     int connect(const char* hostname, int port, const char *ssl_ca_pem = NULL,
             const char *ssl_cli_pem = NULL, const char *ssl_pk_pem = NULL) {
-        nsapi_error_t ret = 0;
-        if ((ret = socket->open(network)) != 0) {
+        int ret = NSAPI_ERROR_OK;
+        if ((ret = socket->open(network)) != NSAPI_ERROR_OK) {
             return ret;
         }
+
+        SocketAddress addr;
+        if (network->gethostbyname(hostname, &addr) != NSAPI_ERROR_OK) {
+            return NSAPI_ERROR_DNS_FAILURE;
+        }
+
+        addr.set_port(port);
+        socket->set_hostname(hostname);
+
 #ifdef USE_TLS
         socket->set_root_ca_cert(ssl_ca_pem);
         socket->set_client_cert_key(ssl_cli_pem, ssl_pk_pem);
 #endif  // USE_TLS
-        return socket->connect(hostname, port);
+        return socket->connect(addr);
     }
 
     int disconnect() {

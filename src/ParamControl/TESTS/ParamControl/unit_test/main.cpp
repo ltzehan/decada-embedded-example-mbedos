@@ -23,10 +23,9 @@ static control_t distribute_control_message_test_1(const size_t call_count)
 
     DistributeControlMessage(expected_param, expected_value, expected_msg_id, expected_endpoint_id);
 
-    osEvent evt = sensor_control_mail_box.get(1000);
-    if (evt.status == osEventMail)
+    sensor_control_mail_t *sensor_control_mail = sensor_control_mail_box.try_get_for(1s);
+    if (sensor_control_mail)
     {
-        sensor_control_mail_t *sensor_control_mail = (sensor_control_mail_t *)evt.value.p;
         actual_param = sensor_control_mail->param;
         free(sensor_control_mail->param);
         actual_value = sensor_control_mail->value;
@@ -60,10 +59,9 @@ static control_t distribute_control_message_test_2(const size_t call_count)
 
     DistributeControlMessage(expected_param, expected_value, expected_msg_id, expected_endpoint_id);
 
-    osEvent evt = sensor_control_mail_box.get(1000);
-    if (evt.status == osEventMail)
+    sensor_control_mail_t *sensor_control_mail = sensor_control_mail_box.try_get_for(1s);
+    if (sensor_control_mail)
     {
-        sensor_control_mail_t *sensor_control_mail = (sensor_control_mail_t *)evt.value.p;
         actual_param = sensor_control_mail->param;
         free(sensor_control_mail->param);
         actual_value = sensor_control_mail->value;

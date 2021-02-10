@@ -333,6 +333,7 @@ private:
 
 private:
     Socket* _socket;
+    NetworkInterface* _network;
     Callback<void(const char *at, uint32_t length)> _body_callback;
 
     ParsedUrl* _parsed_url;

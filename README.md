@@ -30,9 +30,9 @@ For more information, visit https://siot.gov.sg/tech-stack/manuca/overview/
  
 ---
 ## Documentation and References
-* Technical Instruction Manual: https://siot.gov.sg/starter-kit/introduction/
+* Technical Instruction Manual: https://siot.gov.sg/starter-kit/
 * MANUCA DK User Manual: https://siot.gov.sg/files/MANUCA_User_Manual_V1.pdf
 
 ---
 ## License and Contributions
-The software is provided under the Apache-2.0 license (see https://www.siot.gov.sg/starter-kit/terms-and-conditions/). Contributions to this project repository are accepted under the same license. Please see [contributing.md](CONTRIBUTING.md) for more information. 
+The software is provided under the Apache-2.0 license (see https://www.siot.gov.sg/starter-kit/terms-and-conditions/). Contributions to this project repository are accepted under the same license. Please see [CONTRIBUTING.md](CONTRIBUTING.md) for more information. 

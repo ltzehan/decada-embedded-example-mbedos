@@ -52,6 +52,7 @@ public:
                  Callback<void(const char *at, uint32_t length)> body_callback = 0)
         : HttpRequestBase(NULL, body_callback)
     {
+        _network = network;
         _parsed_url = new ParsedUrl(url);
         _request_builder = new HttpRequestBuilder(method, _parsed_url);
         _response = NULL;
@@ -91,7 +92,12 @@ public:
 
 protected:
     virtual nsapi_error_t connect_socket(char *host, uint16_t port) {
-        return ((TLSSocket*)_socket)->connect(host, port);
+        SocketAddress socketAddress;
+        _network->gethostbyname(host, &socketAddress);
+        socketAddress.set_port(port);
+
+        ((TLSSocket*)_socket)->set_hostname(host);
+        return ((TLSSocket*)_socket)->connect(socketAddress);
     }
 };
 

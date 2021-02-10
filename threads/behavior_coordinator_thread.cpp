@@ -20,7 +20,7 @@ void behavior_coordinator_thread(void)
     #undef TRACE_GROUP
     #define TRACE_GROUP  "BehaviorCoordinatorThread"
 
-    const uint32_t behav_thread_sleep_ms = 500;
+    const chrono::milliseconds behav_thread_sleep_ms = 500ms;
     Watchdog &watchdog = Watchdog::get_instance();
 
     SensorProfile sensors_profile;
@@ -32,10 +32,9 @@ void behavior_coordinator_thread(void)
         /* Wait for MQTT connection to be up before continuing */
         event_flags.wait_all(FLAG_MQTT_OK, osWaitForever, false);
         
-        osEvent evt = llp_sensor_mail_box.get(1);
-        if (evt.status == osEventMail) 
+        llp_sensor_mail_t *llp_mail = llp_sensor_mail_box.try_get_for(1ms);
+        if (llp_mail) 
         {
-            llp_sensor_mail_t *llp_mail = (llp_sensor_mail_t*) evt.value.p;
             std::string entity = llp_mail->sensor_type;
             free(llp_mail->sensor_type);
             std::string new_value = llp_mail->value;
@@ -69,12 +68,12 @@ void behavior_coordinator_thread(void)
         if (send_packets)
         {
             stdio_mutex.lock();
-            comms_upstream_mail_t *comms_upstream_mail = comms_upstream_mail_box.calloc();
+            comms_upstream_mail_t *comms_upstream_mail = comms_upstream_mail_box.try_calloc();
             while (comms_upstream_mail == NULL)
             {
-                comms_upstream_mail = comms_upstream_mail_box.calloc();
+                comms_upstream_mail = comms_upstream_mail_box.try_calloc();
                 tr_warn("Memory full. NULL pointer allocated");
-                ThisThread::sleep_for(500);
+                ThisThread::sleep_for(500ms);
             }
             comms_upstream_mail->payload = StringToChar(sensors_profile.GetNewDecadaPacket());
             comms_upstream_mail_box.put(comms_upstream_mail);
