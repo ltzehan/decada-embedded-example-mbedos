@@ -3,11 +3,11 @@
  * @{
  */
 
+#include <chrono>
 #include "boot_manager.h"
 #include "device_uid.h"
 #include "global_params.h"
 #include "persist_store.h"
-#include <chrono>
 
 UnbufferedSerial pc(USBTX, USBRX, 115200);
 

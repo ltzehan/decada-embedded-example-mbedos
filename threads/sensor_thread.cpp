@@ -3,7 +3,6 @@
  * @{
  */
 
-#include <chrono>
 #include <string>
 #include "threads.h"
 #include "mbed_trace.h"
@@ -24,7 +23,7 @@ void execute_sensor_control(int& current_cycle_interval)
     #define TRACE_GROUP "SensorThread"
 
     /* Timeout set to 1 ms */ 
-    sensor_control_mail_t *sensor_control_mail = sensor_control_mail_box.try_get_for(chrono::milliseconds(1));
+    sensor_control_mail_t *sensor_control_mail = sensor_control_mail_box.try_get_for(1ms);
     if (sensor_control_mail)
     {
         std::string param = sensor_control_mail->param;
@@ -55,7 +54,7 @@ void sensor_thread(void)
     #undef TRACE_GROUP
     #define TRACE_GROUP  "SensorThread"
 
-    const int SENSOR_THREAD_SLEEP_MS = 1000;
+    const chrono::milliseconds sensor_thread_sleep_ms = 1000ms;
         
     const PinName i2c_data_pin = PinName::PB_9;
     const PinName i2c_clk_pin = PinName::PB_6;
@@ -63,7 +62,7 @@ void sensor_thread(void)
     Watchdog &watchdog = Watchdog::get_instance();
 
     int current_cycle_interval = StringToInt(ReadCycleInterval());
-    int current_poll_count = current_cycle_interval / SENSOR_THREAD_SLEEP_MS;
+    int current_poll_count = current_cycle_interval / sensor_thread_sleep_ms.count();
     int poll_counter = 0;
 
     Tmp75 onboard_temp_sensor(i2c_data_pin, i2c_clk_pin);
@@ -74,7 +73,7 @@ void sensor_thread(void)
         /* Wait for MQTT connection to be up before continuing */
         event_flags.wait_all(FLAG_MQTT_OK, osWaitForever, false);
 
-        current_poll_count = current_cycle_interval / SENSOR_THREAD_SLEEP_MS;
+        current_poll_count = current_cycle_interval / sensor_thread_sleep_ms.count();
 
         if (poll_counter == 0)
         {
@@ -140,7 +139,7 @@ void sensor_thread(void)
         
         watchdog.kick();
 
-        ThisThread::sleep_for(chrono::milliseconds(SENSOR_THREAD_SLEEP_MS));
+        ThisThread::sleep_for(sensor_thread_sleep_ms);
     }
 }
  

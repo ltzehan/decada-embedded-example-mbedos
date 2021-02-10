@@ -1,3 +1,4 @@
+#include <chrono>
 #include "cmsis_os.h"
 #include "mbed.h"
 #include "utest/utest.h"
@@ -5,7 +6,6 @@
 #include "greentea-client/test_env.h"
 #include "param_control.h"
 #include "global_params.h"
-#include <chrono>
 
 using namespace utest::v1;
 
@@ -24,7 +24,7 @@ static control_t distribute_control_message_test_1(const size_t call_count)
 
     DistributeControlMessage(expected_param, expected_value, expected_msg_id, expected_endpoint_id);
 
-    sensor_control_mail_t *sensor_control_mail = sensor_control_mail_box.try_get_for(chrono::seconds(1));
+    sensor_control_mail_t *sensor_control_mail = sensor_control_mail_box.try_get_for(1s);
     if (sensor_control_mail)
     {
         actual_param = sensor_control_mail->param;
@@ -60,7 +60,7 @@ static control_t distribute_control_message_test_2(const size_t call_count)
 
     DistributeControlMessage(expected_param, expected_value, expected_msg_id, expected_endpoint_id);
 
-    sensor_control_mail_t *sensor_control_mail = sensor_control_mail_box.try_get_for(chrono::seconds(1));
+    sensor_control_mail_t *sensor_control_mail = sensor_control_mail_box.try_get_for(1s);
     if (sensor_control_mail)
     {
         actual_param = sensor_control_mail->param;

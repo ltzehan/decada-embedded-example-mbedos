@@ -55,19 +55,19 @@ std::string CreateDecadaResponse(std::string msg, std::string msg_id)
 void DecadaServiceResponse(std::string service_id, std::string msg_id, std::string msg)
 {
     std::string snon = CreateDecadaResponse(msg, msg_id);
-    service_response_mail_t *service_response_mail = service_response_mail_box.calloc();
+    service_response_mail_t *service_response_mail = service_response_mail_box.try_calloc();
     while (service_response_mail == NULL)
     {
-        service_response_mail = service_response_mail_box.calloc();
+        service_response_mail = service_response_mail_box.try_calloc();
         tr_warn("Memory full. NULL pointer allocated");
-        ThisThread::sleep_for(500); 
+        ThisThread::sleep_for(500ms); 
     }
     
     service_response_mail->response = StringToChar(snon);
     service_response_mail->service_id = StringToChar(service_id);
     service_response_mail_box.put(service_response_mail);
 
-    ThisThread::sleep_for(100);
+    ThisThread::sleep_for(100ms);
     return;
 }
 

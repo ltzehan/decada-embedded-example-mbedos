@@ -30,7 +30,7 @@ void subscription_manager_thread(DecadaManagerV2* decada_ptr)
     #undef TRACE_GROUP
     #define TRACE_GROUP  "SubscriptionManagerThread"
     
-    const chrono::milliseconds SUBMGR_THREAD_SLEEP_MS = 1000ms;
+    const chrono::milliseconds submgr_thread_sleep_ms = 1000ms;
     mqtt_stack* stack = decada_ptr->GetMqttStackPointer();
 
     while (1)
@@ -44,7 +44,7 @@ void subscription_manager_thread(DecadaManagerV2* decada_ptr)
                 decada_ptr->Reconnect();
             }
         }
-        ThisThread::sleep_for(SUBMGR_THREAD_SLEEP_MS);
+        ThisThread::sleep_for(submgr_thread_sleep_ms);
     }
 }
 
@@ -54,7 +54,7 @@ void communications_controller_thread(void)
     #undef TRACE_GROUP
     #define TRACE_GROUP  "CommunicationsControllerThread"
     
-    const uint32_t comms_thread_sleep_ms = 500;
+    const chrono::milliseconds comms_thread_sleep_ms = 500ms;
     const uint32_t ntp_counter_max = 14400000;      // (comms_thread_sleep_ms)*(ntp_counter_max) = 4 hours 
     Watchdog &watchdog = Watchdog::get_instance();
 
@@ -110,7 +110,7 @@ void communications_controller_thread(void)
             ntp_counter++;
         }
         
-        comms_upstream_mail_t *comms_upstream_mail = comms_upstream_mail_box.try_get_for(chrono::milliseconds(1));
+        comms_upstream_mail_t *comms_upstream_mail = comms_upstream_mail_box.try_get_for(1ms);
         if (comms_upstream_mail) 
         {
             payload = comms_upstream_mail->payload;
@@ -123,7 +123,7 @@ void communications_controller_thread(void)
             comms_upstream_mail_box.free(comms_upstream_mail);
         }
 
-        service_response_mail_t *service_response_mail = service_response_mail_box.try_get_for(chrono::milliseconds(1));
+        service_response_mail_t *service_response_mail = service_response_mail_box.try_get_for(1ms);
         if (service_response_mail) 
         {
             payload = service_response_mail->response;
@@ -146,7 +146,7 @@ void communications_controller_thread(void)
         }
         
         watchdog.kick();
-        ThisThread::sleep_for(chrono::milliseconds(comms_thread_sleep_ms));
+        ThisThread::sleep_for(comms_thread_sleep_ms);
     }
 }
 

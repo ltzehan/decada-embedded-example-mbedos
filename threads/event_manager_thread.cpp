@@ -18,7 +18,7 @@ void event_manager_thread(void)
     #undef TRACE_GROUP
     #define TRACE_GROUP  "EventManagerThread"
    
-    const uint32_t evtmgr_sleep_ms = 5000;
+    const chrono::milliseconds evtmgr_sleep_ms = 5000ms;
     Watchdog &watchdog = Watchdog::get_instance();
 
     while (1)
@@ -26,10 +26,9 @@ void event_manager_thread(void)
         // Wait for MQTT connection to be up before continuing
         event_flags.wait_all(FLAG_MQTT_OK, osWaitForever, false);
         
-        osEvent evt = mqtt_arrived_mail_box.get(1); 
-        if (evt.status == osEventMail) 
+        mqtt_arrived_mail_t *mqtt_arrived_mail = mqtt_arrived_mail_box.try_get_for(1ms); 
+        if (mqtt_arrived_mail) 
         {
-            mqtt_arrived_mail_t *mqtt_arrived_mail = (mqtt_arrived_mail_t*) evt.value.p;
             std::string endpoint_id = mqtt_arrived_mail->endpoint_id;
             free(mqtt_arrived_mail->endpoint_id);
             std::string msg_id = mqtt_arrived_mail->msg_id;
