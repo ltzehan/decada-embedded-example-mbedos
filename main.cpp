@@ -81,7 +81,7 @@ int main()
         
         watchdog.start(wd_timeout_ms);
         
-        ThisThread::sleep_for(osWaitForever);
+        ThisThread::sleep_for(rtos::Kernel::wait_for_u32_forever);
     }
 }
 #endif
