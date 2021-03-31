@@ -1,4 +1,4 @@
-<a href="https://govtechsiot.github.io/stack-manuca-os/"><img src="https://codedocs.xyz/doxygen/doxygen.svg"/></a>
+<a href="https://govtechsiot.github.io/decada-embedded-example-mbedos/"><img src="https://codedocs.xyz/doxygen/doxygen.svg"/></a>
 
 ## Introduction
 `decada-embedded-example-mbedos`, previously known as stack-manuca-os, is a functional real-time operating system example using mbedos for embedded software developers to reference and build upon. This example showcases how one can publish sensor measure points to the government's IoT infrastructure via DECADA Cloud.
