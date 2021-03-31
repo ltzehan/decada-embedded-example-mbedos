@@ -17,7 +17,7 @@
 ## Quick Start
  * Set up the development environment (https://siot.gov.sg/starter-kit/set-up-your-software-env/) 
  * Clone the repository onto local disk: 
-    `git clone --recurse-submodules https://github.com/GovTechSIOT/stack-manuca-os.git`
+    `git clone --recurse-submodules https://github.com/GovTechSIOT/decada-embedded-example-mbedos.git`
  * Toggle operating modes in mbed_app.json
  * Compile the binary (https://siot.gov.sg/starter-kit/build-and-flash-sw/)
  * Copy the binary file (.bin) into the MANUCA DK via programmer (eg. stlink v3).
