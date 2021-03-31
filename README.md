@@ -1,13 +1,7 @@
-<div align="center">
-  <img src="https://raw.githubusercontent.com/GovTechSIOT/stack-manuca-os/master/docs/manuca_os_logo_800_600.png">
-</div>
-
 <a href="https://govtechsiot.github.io/stack-manuca-os/"><img src="https://codedocs.xyz/doxygen/doxygen.svg"/></a>
 
 ## Introduction
-MANUCA OS is a functional real-time operating system for sensor node developers to swiftly build upon using the MANUCA DK, and publish sensor measure points to the government cloud via DECADA Cloud.
-
-For more information, visit https://siot.gov.sg/tech-stack/manuca/overview/
+`decada-embedded-example-mbedos`, previously known as stack-manuca-os, is a functional real-time operating system example using mbedos for embedded software developers to reference and build upon. This example showcases how one can publish sensor measure points to the government's IoT infrastructure via DECADA Cloud.
 
 ---
 ## Development Team
