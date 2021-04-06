@@ -13,24 +13,24 @@
  *
  * See the License for the specific language governing permissions and limitations under the License.
  *******************************************************************************************************/
-#ifndef DECADA_MANAGER_V2_H
-#define DECADA_MANAGER_V2_H
+#ifndef DECADA_MANAGER_H
+#define DECADA_MANAGER_H
 
 #include <string>
 #include <unordered_set>
-#include "crypto_engine_v2.h"
 #include "global_params.h"
 #include "MQTTNetwork.h"
 #include "MQTTmbed.h"
 #include "MQTTClient.h"
+#include "crypto_engine.h"
 
-/** DecadaManagerV2 class.
+/** DecadaManager class.
  *  @brief  MQTT instance that communicates with DECADA Cloud over TLS, and provisioned via dynamic activation.
  *
  *  Example:
  *  @code{.cpp}
  *  #include "mbed.h"
- *  #include "decada_manager_v2.h"
+ *  #include "decada_manager.h"
  *
  *  int main() 
  *  {
@@ -43,7 +43,7 @@
  *
  *      if (network_connected)
  *      {
- *          DecadaManagerV2 decada(network);
+ *          DecadaManager decada(network);
  *          decada.Connect();
  *          decada.Subscribe(sub_topic.c_str());
  *          decada.Publish(pub_topic.c_str(), pub_msg);
@@ -53,11 +53,11 @@
  */
 
 /* List of trusted Root CA Certificates
- * For DecadaManagerV2: Sectigo Root CA
+ * For DecadaManager: Sectigo Root CA
  *
  * To add more root certificates, just concatenate them.
  */
-const char SSL_CA_STORE_PEM[] =  
+const char ROOT_CA_PEM[] =  
     "-----BEGIN CERTIFICATE-----\n"
     "MIIGGTCCBAGgAwIBAgIQE31TnKp8MamkM3AZaIR6jTANBgkqhkiG9w0BAQwFADCB\n"
     "iDELMAkGA1UEBhMCVVMxEzARBgNVBAgTCk5ldyBKZXJzZXkxFDASBgNVBAcTC0pl\n"
@@ -94,14 +94,28 @@ const char SSL_CA_STORE_PEM[] =
     "MntHWpdLgtJmwsQt6j8k9Kf5qLnjatkYYaA7jBU=\n"
     "-----END CERTIFICATE-----\n";
 
-class DecadaManagerV2 : protected CryptoEngineV2
+/* Expected response from signing CSR */
+typedef struct {
+    // Certificate from CA signing CSR
+    std::string cert;
+    // Serial number of issued certificate
+    std::string cert_sn;
+} csr_sign_resp;
+
+class DecadaManager : public CryptoEngine
 {
     public:
-        DecadaManagerV2(NetworkInterface*& net)
-        {
-            network_ = net;
-        };
+#if defined(MBED_CONF_APP_USE_SECURE_ELEMENT) && (MBED_CONF_APP_USE_SECURE_ELEMENT == 1)
+        DecadaManager(NetworkInterface*& net, SecureElement* se);
+#else
+        DecadaManager(NetworkInterface*& net);
+#endif  // MBED_CONF_APP_USE_SECURE_ELEMENT
         
+        /* Used by CryptoEngine to sign CSR */
+        csr_sign_resp SignCertificateSigningRequest(std::string csr);
+
+        std::string CheckDeviceCreation(void);
+
         /* Publish & Subscribe */
         bool Connect(void);
         bool Publish(const char* topic, std::string payload);
@@ -112,15 +126,13 @@ class DecadaManagerV2 : protected CryptoEngineV2
 
     private:
         /* DECADA Provisioning */
-        std::string GetDecadaRootCertificateAuthority(void);
         std::string GetAccessToken(void);
-        std::string CheckDeviceCreation(void);
-        std::string CreateDeviceInDecada(std::string default_name);
-        std::pair<std::string, std::string> GetClientCertificate(void);
-        std::pair<std::string, std::string> RenewClientCertificate(void);
+        std::string GetDeviceSecret(void);
+        std::string CreateDeviceInDecada(const std::string default_name);
+        csr_sign_resp RenewClientCertificate(void);
         
         /* Network Connection */
-        bool ConnectMqttNetwork(std::string root_ca, std::string client_cert, std::string private_key);
+        bool ConnectMqttNetwork(void);
         bool ConnectMqttClient(void);
 
         /* Network Disconnection */
@@ -128,9 +140,9 @@ class DecadaManagerV2 : protected CryptoEngineV2
         void DisconnectMqttClient(void);
 
         /* Reconnection */
-        bool ReconnectMqttNetwork(std::string root_ca, std::string client_cert, std::string private_key);
+        bool ReconnectMqttNetwork(void);
         bool ReconnectMqttClient(void);
-        bool ReconnectMqttService(std::string root_ca, std::string client_cert, std::string private_key);
+        bool ReconnectMqttService(void);
 
         const std::string decada_product_key_ = MBED_CONF_APP_DECADA_PRODUCT_KEY;
         const std::string decada_access_key_ = MBED_CONF_APP_DECADA_ACCESS_KEY;
@@ -138,9 +150,13 @@ class DecadaManagerV2 : protected CryptoEngineV2
         const std::string decada_ou_id_ = MBED_CONF_APP_DECADA_OU_ID;
         const std::string api_url_ = MBED_CONF_APP_DECADA_API_URL;
         const std::string broker_ip_ = "mqtt.decada.gov.sg";      
+#if defined(MBED_CONF_APP_USE_SECURE_ELEMENT) && (MBED_CONF_APP_USE_SECURE_ELEMENT == 1)      
+        const int mqtt_server_port_ = 18886;
+#else
         const int mqtt_server_port_ = 18885;
+#endif  // MBED_CONF_APP_USE_SECURE_ELEMENT
+        
         std::string device_secret_;
-
         NetworkInterface* network_ = NULL;
         MQTTNetwork* mqtt_network_ = NULL;
         MQTTNetwork** mqtt_network_ptr_ = &mqtt_network_;
@@ -151,4 +167,4 @@ class DecadaManagerV2 : protected CryptoEngineV2
         std::unordered_set<std::string> sub_topics_;
 };
 
- #endif  // DECADA_MANAGER_V2_H
+#endif  // DECADA_MANAGER_H

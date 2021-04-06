@@ -52,3 +52,13 @@
 #ifndef MBEDTLS_PEM_WRITE_C
     #define MBEDTLS_PEM_WRITE_C
 #endif //MBEDTLS_PEM_WRITE_C
+
+// Configure mbedTLS to use alternative implementation
+#if defined(MBED_CONF_APP_USE_SECURE_ELEMENT) && (MBED_CONF_APP_USE_SECURE_ELEMENT == 1)
+    // #define MBEDTLS_ENTROPY_HARDWARE_ALT
+    #define MBEDTLS_ECDSA_GENKEY_ALT
+    #define MBEDTLS_ECDSA_VERIFY_ALT
+    #define MBEDTLS_ECDSA_SIGN_ALT
+    #define MBEDTLS_ECDH_COMPUTE_SHARED_ALT
+    #define MBEDTLS_ECDH_GEN_PUBLIC_ALT
+#endif // MBED_CONF_APP_USE_SE_TLS

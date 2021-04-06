@@ -3,7 +3,7 @@
                 "MBED_STACK_STATS_ENABLED=0",
                 "MBED_MEM_TRACING_ENABLED=0",
                 "OS_THREAD_LIBSPACE_NUM=5",
-                "MBEDTLS_USER_CONFIG_FILE=\"mbedtls_entropy_config.h\""
+                "MBEDTLS_USER_CONFIG_FILE=\"mbedtls_user_config.h\""
                 ],
     "config": {
         "main-stack-size": {
@@ -20,6 +20,10 @@
         },
         "use-tls": {
             "help": "If true, use TLS",
+            "value": true
+        },
+        "use-secure-element": {
+            "help": "Uses the secure element to handle client authentication and cryptographic operations in the TLS session",
             "value": true
         },
         "wifi-tx": {
@@ -66,7 +70,7 @@
             "target.printf_lib"                         : "std",
             "storage.storage_type"                      : "TDB_INTERNAL",
             "mbed-trace.enable"                         : 1,
-            "mbed-trace.max-level"                      : "TRACE_LEVEL_INFO",
+            "mbed-trace.max-level"                      : "TRACE_LEVEL_DEBUG",
             "platform.stdio-baud-rate"                  : 115200,
             "platform.stdio-convert-newlines"           : true,
             "platform.error-reboot-max"                 : 1000,
