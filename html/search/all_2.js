@@ -1,7 +1,7 @@
 var searchData=
 [
   ['data_20structure_20conversions_12',['Data Structure Conversions',['../group__conversions.html',1,'']]],
-  ['decada_20manager_20v3_13',['DECADA Manager V3',['../group__decada__manager__v3.html',1,'']]],
+  ['decada_20manager_13',['DECADA Manager',['../group__decada__manager.html',1,'']]],
   ['decadaserviceresponse_14',['DecadaServiceResponse',['../group__trace__manager.html#ga94ae5c7f6d4035d0a89a8ffd18507614',1,'DecadaServiceResponse(std::string service_id, std::string msg_id, std::string msg):&#160;trace_manager.cpp'],['../group__trace__manager.html#ga94ae5c7f6d4035d0a89a8ffd18507614',1,'DecadaServiceResponse(std::string trace_level, std::string msg, std::string msg_id):&#160;trace_manager.cpp']]],
   ['device_20uuid_15',['Device UUID',['../group__device__uuid.html',1,'']]],
   ['distributecontrolmessage_16',['DistributeControlMessage',['../group__param__control.html#gab50f966a50fe75218f940f8cf71aedfb',1,'DistributeControlMessage(std::string param, int value, std::string msg_id, std::string endpoint_id):&#160;param_control.cpp'],['../group__param__control.html#gab50f966a50fe75218f940f8cf71aedfb',1,'DistributeControlMessage(std::string param, int value, std::string msg_id, std::string endpoint_id):&#160;param_control.cpp']]],

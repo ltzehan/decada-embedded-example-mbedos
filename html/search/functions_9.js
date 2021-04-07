@@ -11,7 +11,7 @@ var searchData=
   ['readsystemtime_130',['ReadSystemTime',['../group__persist__store.html#gad04a87d82c28798eb5674c4d9bbced37',1,'ReadSystemTime(void):&#160;persist_store.cpp'],['../group__persist__store.html#gad04a87d82c28798eb5674c4d9bbced37',1,'ReadSystemTime(void):&#160;persist_store.cpp']]],
   ['readwifipass_131',['ReadWifiPass',['../group__persist__store.html#ga03a576fdbbc144e5fc722e7099f16329',1,'ReadWifiPass(void):&#160;persist_store.cpp'],['../group__persist__store.html#ga03a576fdbbc144e5fc722e7099f16329',1,'ReadWifiPass(void):&#160;persist_store.cpp']]],
   ['readwifissid_132',['ReadWifiSsid',['../group__persist__store.html#ga78f61833cad913ae0b90ba505a9e5552',1,'ReadWifiSsid(void):&#160;persist_store.cpp'],['../group__persist__store.html#ga78f61833cad913ae0b90ba505a9e5552',1,'ReadWifiSsid(void):&#160;persist_store.cpp']]],
-  ['reconnect_133',['Reconnect',['../group__decada__manager__v3.html#gafb180876af540128a9d06f3f8a8fb0d6',1,'DecadaManager']]],
-  ['renewcertificate_134',['RenewCertificate',['../group__decada__manager__v3.html#ga04e083d711e551cc202a2dd42a5df8ed',1,'DecadaManager']]],
+  ['reconnect_133',['Reconnect',['../group__decada__manager.html#gafb180876af540128a9d06f3f8a8fb0d6',1,'DecadaManager']]],
+  ['renewcertificate_134',['RenewCertificate',['../group__decada__manager.html#ga04e083d711e551cc202a2dd42a5df8ed',1,'DecadaManager']]],
   ['runbootmanager_135',['RunBootManager',['../group__boot__manager.html#ga8e9a41ad197150c66e014fd4bcaecfa4',1,'RunBootManager(void):&#160;boot_manager.cpp'],['../group__boot__manager.html#ga8e9a41ad197150c66e014fd4bcaecfa4',1,'RunBootManager(void):&#160;boot_manager.cpp']]]
 ];

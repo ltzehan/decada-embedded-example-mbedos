@@ -65,7 +65,7 @@ $(function() {
 <div class="title">decada-embedded-example-mbedos Documentation</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="md_README"></a> <a href="https://govtechsiot.github.io/decada-embedded-example-mbedos/"><img src="https://codedocs.xyz/doxygen/doxygen.svg" alt="" style="pointer-events: none;" class="inline"/></a></p>
+<div class="textblock"><p><a class="anchor" id="md_mbed_tls_server_decada_embedded_example_mbedos_README"></a> <a href="https://govtechsiot.github.io/decada-embedded-example-mbedos/"><img src="https://codedocs.xyz/doxygen/doxygen.svg" alt="" style="pointer-events: none;" class="inline"/></a></p>
 <h2><a class="anchor" id="autotoc_md0"></a>
 Introduction</h2>
 <p><code>decada-embedded-example-mbedos</code>, previously known as stack-manuca-os, is a functional real-time operating system example using mbedos for embedded software developers to reference and build upon. This example showcases how one can publish sensor measure points to the government's IoT infrastructure via DECADA Cloud.</p>
@@ -77,9 +77,17 @@ Development Team</h2>
 <li>Goh Kok Boon (<a href="#" onclick="location.href='mai'+'lto:'+'goh'+'_k'+'ok_'+'bo'+'on@'+'te'+'ch.'+'go'+'v.s'+'g'; return false;">goh_k<span style="display: none;">.nosp@m.</span>ok_b<span style="display: none;">.nosp@m.</span>oon@t<span style="display: none;">.nosp@m.</span>ech.<span style="display: none;">.nosp@m.</span>gov.s<span style="display: none;">.nosp@m.</span>g</a>)</li>
 </ul>
 <h2><a class="anchor" id="autotoc_md2"></a>
-System Requirements for Development</h2>
+Requirements for Development</h2>
 <ul>
-<li>Windows, MacOS or Ubuntu 18.04</li>
+<li>Development Machine running either Windows, MacOS or Ubuntu 18.04</li>
+<li>An Mbed OS supported target (see <a href="https://os.mbed.com/platforms/">https://os.mbed.com/platforms/</a>)<ul>
+<li>Source code is tested using a STM32F767ZI</li>
+<li>Most devices running an ARM Cortex-M4 and ARM Cortex-M7 should work as well</li>
+</ul>
+</li>
+<li>ESP32 WiFi Module</li>
+<li>Infineon Optiga Trust X (<em>optional</em>)</li>
+<li>External MCU Programmer (optional; for devices that do not have an onboard programmer, like a STLINK-v3)</li>
 </ul>
 <h2><a class="anchor" id="autotoc_md3"></a>
 Quick Start</h2>
@@ -87,27 +95,27 @@ Quick Start</h2>
 <li>Set up the development environment (<a href="https://siot.gov.sg/starter-kit/set-up-your-software-env/">https://siot.gov.sg/starter-kit/set-up-your-software-env/</a>)</li>
 <li>Clone the repository onto local disk: <code>git clone --recurse-submodules <a href="https://github.com/GovTechSIOT/decada-embedded-example-mbedos.git">https://github.com/GovTechSIOT/decada-embedded-example-mbedos.git</a></code></li>
 <li>Toggle operating modes in <code>mbed_app.json</code></li>
-<li>Compile the binary (<a href="https://siot.gov.sg/starter-kit/build-and-flash-sw/">https://siot.gov.sg/starter-kit/build-and-flash-sw/</a>)</li>
-<li>Copy the binary file (.bin) from the compilation process into the board via a programmer (eg. STLINK V3).</li>
+<li>Edit configurations in <code>mbed_app.json</code> (if necessary)<ul>
+<li><code>use-secure-element</code> - Uses the Infineon Optiga Trust X as the Secure Element in this example</li>
+</ul>
+</li>
+<li>Copy the compiled binary file (.bin) into your Mbed device via a programmer</li>
 </ul>
 <h3><a class="anchor" id="autotoc_md4"></a>
 Hardware Setup</h3>
-<p>This repository is tested on the STM32F767ZI DK with peripherals:</p>
+<p>This repository is tested on the STM32F767ZI DK with peripherals configured as:</p>
+<p><b>ESP32</b></p>
 <ul>
-<li>ESP32 (WiFi)<ul>
 <li>Using connectors <b>CN501</b>, <b>CN502</b></li>
-<li>Pins configurable in <code>mbed_app.json</code></li>
+<li>Pins configurable in <code>mbed_app.json</code> (<code>wifi-tx</code>, <code>wifi-rx</code>, <code>wifi-en</code>)</li>
 </ul>
-</li>
-<li>Infineon Optiga Trust X (Secure Element)<ul>
+<p><b>Infineon Optiga Trust X</b></p>
+<ul>
 <li>Using connectors <b>CN310</b> and RST pin connected to pin <b>PF2</b> (<b>CN103</b>)</li>
 <li>Pins configurable in <code>lib/optiga/mbed_lib.json</code></li>
 </ul>
-</li>
-</ul>
 <hr  />
 <p>Other hardware targets supported by Mbed OS can utilize the repository by changing the targeted board in the compilation process.</p>
-<p>If a secure element is unavailable, the dependent functionality can be disabled by setting <code>use-secure-element</code> to false in <code>mbed_app.json</code>.</p>
 <h2><a class="anchor" id="autotoc_md6"></a>
 Documentation and References</h2>
 <ul>

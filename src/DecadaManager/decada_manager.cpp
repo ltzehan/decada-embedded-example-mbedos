@@ -1,5 +1,5 @@
 /**
- * @defgroup decada_manager_v3 DECADA Manager V3
+ * @defgroup decada_manager DECADA Manager
  * @{
  */
 
@@ -10,11 +10,11 @@
 #include "https_request.h"
 #include "json.h"
 #include "conversions.h"
+#include "crypto_engine.h"
 #include "device_uid.h"
 #include "persist_store.h"
 #include "subscription_callback.h"
 #include "time_engine.h"
-#include "crypto_engine.h"
 
 #undef TRACE_GROUP
 #define TRACE_GROUP  "DecadaManager"
@@ -226,7 +226,7 @@ bool DecadaManager::Reconnect(void)
     return ReconnectMqttService();
 }
 
-// TODO:SE Not tested
+/// TODO: Test with SE when server upgrade completes
 /**
  *  @brief      Renew DECADA Client Certificate.
  *  @details    This method will invoke a software reset; New bootup will connect to DECADA using the renewed certificate.

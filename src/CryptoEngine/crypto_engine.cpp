@@ -24,61 +24,6 @@
 #undef TRACE_GROUP
 #define TRACE_GROUP  "CryptoEngine"
 
-static const char* mbedtls_pers = "gen_key";
-static const std::string cert_subject_base = "C=SG, ST=Singapore, L=Singapore, O=DECADA, OU=DECADA CA, CN=";
-
-#if defined(MBED_CONF_APP_USE_SECURE_ELEMENT) && (MBED_CONF_APP_USE_SECURE_ELEMENT == 1)
-CryptoEngine::CryptoEngine(SecureElement* se)  
-    : secureElement_(se)
-{
-#else
-CryptoEngine::CryptoEngine(void)
-{
-#endif
-
-    mbedtls_pk_init(&pk_ctx_);
-    mbedtls_ecp_keypair_init(&ecp_keypair_);
-    mbedtls_entropy_init(&entropy_ctx_);
-    mbedtls_ctr_drbg_init(&ctrdrbg_ctx_);
-
-    /* Seed PRNG on start of CryptoEngine lifecycle */
-    int rc = mbedtls_ctr_drbg_seed(&ctrdrbg_ctx_, mbedtls_entropy_func, &entropy_ctx_, (const unsigned char*)mbedtls_pers, strlen(mbedtls_pers));
-    if (rc)
-    {
-        tr_warn("mbedtls_ctr_drbg_seed returned -0x%04X - FAILED", -rc);
-        return;
-    }
-
-    std::string client_cert = ReadClientCertificate();
-    csr_ = "";
-
-    /* Generate keypair if certificate is invalid */
-    if (client_cert == "" || client_cert == "invalid")
-    {
-        csr_ = GenerateCertificateSigningRequest();
-        if (csr_ == "")
-        {
-            tr_error("No client certificate; failed to generate new CSR");
-        }
-    }
-#if defined(MBED_CONF_APP_USE_SECURE_ELEMENT) && (MBED_CONF_APP_USE_SECURE_ELEMENT == 1)
-    else
-    {
-        /* Configure mbedTLS to use SE-enabled methods */
-        pk_info_ = secureElement_->GetConfiguredPkInfo();
-        pk_ctx_.pk_info = &pk_info_;
-    }
-#endif   // MBED_CONF_APP_USE_SECURE_ELEMENT
-}
-
-CryptoEngine::~CryptoEngine(void)
-{
-    mbedtls_pk_free(&pk_ctx_);
-    mbedtls_ecp_keypair_free(&ecp_keypair_);
-    mbedtls_ctr_drbg_free(&ctrdrbg_ctx_);
-    mbedtls_entropy_free(&entropy_ctx_);
-}
-
 /**
  *  @brief  Generate an ECC keypair.
  *  @author Lee Tze Han
@@ -91,7 +36,7 @@ bool CryptoEngine::GenerateKeypair(void)
     unsigned char buf[512];
 
 #if defined(MBED_CONF_APP_USE_SECURE_ELEMENT) && (MBED_CONF_APP_USE_SECURE_ELEMENT == 1)
-    if (!secureElement_->GenerateEccKeypair(ecp_keypair_))
+    if (!secure_element_->GenerateEccKeypair(ecp_keypair_))
     {
         return false;
     }
@@ -100,7 +45,7 @@ bool CryptoEngine::GenerateKeypair(void)
 
     /* Configure mbedTLS to use SE-enabled methods */
     /* Must be configured before generating keypair */
-    pk_info_ = secureElement_->GetConfiguredPkInfo();
+    pk_info_ = secure_element_->GetConfiguredPkInfo();
     pk_ctx_.pk_info = &pk_info_;
 #else
     rc = mbedtls_ecp_gen_key(MBEDTLS_ECP_DP_SECP256R1, &ecp_keypair_, mbedtls_ctr_drbg_random, &ctrdrbg_ctx_);
@@ -136,7 +81,7 @@ std::string CryptoEngine::GenerateCertificateSigningRequest(void)
     mbedtls_x509write_csr mbedtls_csr_request;
     unsigned char mbedtls_csr_pem[1024];
 
-	std::string mbedtls_subject_name = GetCertificateSubjectName(); 
+    std::string mbedtls_subject_name = GetCertificateSubjectName(); 
 
     int rc;
     std::string csr = "invalid";
@@ -151,7 +96,7 @@ std::string CryptoEngine::GenerateCertificateSigningRequest(void)
 
         /* Configure CSR */
         mbedtls_x509write_csr_init(&mbedtls_csr_request);
-		mbedtls_x509write_csr_set_md_alg(&mbedtls_csr_request, MBEDTLS_MD_SHA256);
+        mbedtls_x509write_csr_set_md_alg(&mbedtls_csr_request, MBEDTLS_MD_SHA256);
         mbedtls_x509write_csr_set_key_usage(&mbedtls_csr_request, MBEDTLS_X509_KU_DIGITAL_SIGNATURE);
         mbedtls_x509write_csr_set_key(&mbedtls_csr_request, &pk_ctx_);
 
@@ -191,7 +136,7 @@ std::string CryptoEngine::GetCertificateSubjectName(void)
 {
     const std::string timestamp_ms = MsPaddingIntToString(RawRtcTimeNow());
 
-    return cert_subject_base + device_uuid + timestamp_ms;
+    return cert_subject_base_ + device_uuid + timestamp_ms;
 }
 
 /**

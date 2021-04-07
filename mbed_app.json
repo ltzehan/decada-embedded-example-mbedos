@@ -24,7 +24,7 @@
         },
         "use-secure-element": {
             "help": "Uses the secure element to handle client authentication and cryptographic operations in the TLS session",
-            "value": true
+            "value": false
         },
         "wifi-tx": {
             "help": "TX pin to WiFi module",
@@ -70,7 +70,7 @@
             "target.printf_lib"                         : "std",
             "storage.storage_type"                      : "TDB_INTERNAL",
             "mbed-trace.enable"                         : 1,
-            "mbed-trace.max-level"                      : "TRACE_LEVEL_DEBUG",
+            "mbed-trace.max-level"                      : "TRACE_LEVEL_INFO",
             "platform.stdio-baud-rate"                  : 115200,
             "platform.stdio-convert-newlines"           : true,
             "platform.error-reboot-max"                 : 1000,
