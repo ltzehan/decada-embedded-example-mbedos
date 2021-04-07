@@ -15,13 +15,17 @@
  * limitations under the License.
  */
 
-#include "mbed.h"
-#include "mbed_trace.h"
-#include "mbedtls/debug.h"
-#include "mbedtls/platform.h"
 #include "SecureElementSocketWrapper.h"
+#include "platform/Callback.h"
+#include "drivers/Timer.h"
+#include "events/mbed_events.h"
 
 #define TRACE_GROUP "SecureElementSocket"
+#include "mbed-trace/mbed_trace.h"
+#include "mbedtls/debug.h"
+#include "mbedtls/platform.h"
+#include "mbed_error.h"
+#include "rtos/Kernel.h"
 
 // This class requires Mbed TLS SSL/TLS client code
 #if defined(MBEDTLS_SSL_CLI_C)

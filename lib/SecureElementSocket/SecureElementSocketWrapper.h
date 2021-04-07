@@ -18,7 +18,9 @@
 #ifndef SECURE_ELEMENT_SOCKET_WRAPPER_H
 #define SECURE_ELEMENT_SOCKET_WRAPPER_H
 
-#include "mbed.h"
+#include "netsocket/Socket.h"
+#include "rtos/EventFlags.h"
+#include "platform/Callback.h"
 #include "mbedtls/platform.h"
 #include "mbedtls/ssl.h"
 #include "mbedtls/entropy.h"
