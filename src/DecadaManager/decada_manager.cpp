@@ -19,28 +19,6 @@
 #undef TRACE_GROUP
 #define TRACE_GROUP  "DecadaManager"
 
-#if defined(MBED_CONF_APP_USE_SECURE_ELEMENT) && (MBED_CONF_APP_USE_SECURE_ELEMENT == 1)
-DecadaManager::DecadaManager(NetworkInterface*& net, SecureElement* se)
-    : network_(net), CryptoEngine(se) 
-{
-#else
-DecadaManager::DecadaManager(NetworkInterface*& net)
-    : network_(net)
-{
-#endif  // MBED_CONF_APP_USE_SECURE_ELEMENT
-    if (csr_ != "")
-    {
-        /* Previous client certificate did not exist or was invalidated by CryptoEngine */
-        csr_sign_resp sign_resp = SignCertificateSigningRequest(csr_);
-
-        if (sign_resp.cert != "invalid" && sign_resp.cert_sn != "invalid")
-        {
-            WriteClientCertificate(sign_resp.cert);
-            WriteClientCertificateSerialNumber(sign_resp.cert_sn);
-        }
-    }
-}
-
 /**
  *  @brief      RESTful call to DECADA for issuing a client certificate from the certificate signing request.
  *  @details    The client certificate is required for client authentication over TLS.
