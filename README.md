@@ -20,7 +20,7 @@
   * Most devices running an ARM Cortex-M4 and ARM Cortex-M7 should work as well
 * ESP32 WiFi Module
 * Infineon Optiga Trust X (*optional*)
-* External MCU Programmer (optional; for devices that do not have an onboard programmer, like a STLINK-v3)
+* External MCU Programmer (*optional*; for devices that do not have an onboard programmer, like a STLINK-v3)
 
 
 
@@ -56,8 +56,9 @@ Other hardware targets supported by Mbed OS can utilize the repository by changi
 
 
 ## Documentation and References
-* Technical Instruction Manual: https://siot.gov.sg/starter-kit/
-* MANUCA DK User Manual: https://siot.gov.sg/files/MANUCA_User_Manual_V1.pdf
+* Singapore Government Tech Stack - Sensors & IoT: https://www.siot.gov.sg/core-products/decada-embedded/
+* Technical Instruction Manual for GovTech's SIOT Starter Kit: https://siot.gov.sg/starter-kit/
+* GovTech's Custom STM32F767ZI Development Kit (MANUCA DK) User Manual: https://siot.gov.sg/files/MANUCA_User_Manual_V1.pdf
 
 
 
