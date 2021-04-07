@@ -6,13 +6,9 @@
 #include "mbed.h"
 #include "mbed_trace.h"
 #include "optiga/optiga_crypt.h"
-#include "optiga/optiga_util.h"
 #include "optiga/ifx_i2c/ifx_i2c_config.h"
 #include "se_trustx.h"
 #include "mbedtls/asn1write.h"
-
-#define PAL_OS_HAS_EVENT_INIT
-#include "optiga/pal/pal_os_event.h"
 
 #undef TRACE_GROUP
 #define TRACE_GROUP  "TrustX"
@@ -24,8 +20,6 @@ optiga_key_id_t ssl_key_id = OPTIGA_KEY_STORE_ID_E0F1;
 optiga_key_id_t ecdsa_key_id = OPTIGA_SESSION_ID_E100;
 optiga_key_id_t ecdh_key_id = OPTIGA_SESSION_ID_E101;
 
-uint8_t current_limit = 15;
-
 /* Configuration for Trust X I2C */
 optiga_comms_t optiga_comms = {
     (void*) &ifx_i2c_context_0, 
@@ -33,38 +27,6 @@ optiga_comms_t optiga_comms = {
     NULL, 
     OPTIGA_COMMS_SUCCESS
 };
-
-TrustX::TrustX()
-{
-    pal_os_event_init();
-
-    optiga_lib_status_t status;
-    while (true)
-    {
-        status = optiga_util_open_application(&optiga_comms);
-        if (status == OPTIGA_LIB_SUCCESS)
-        {
-            tr_debug("Successfully initialized Trust X");
-            break;
-        }
-
-        tr_info("Failed to initialize Trust X, retrying...");
-        ThisThread::sleep_for(200ms);
-    }
-
-    /* Configuring S/W defined current limit */
-    status = optiga_util_write_data(eCURRENT_LIMITATION, OPTIGA_UTIL_WRITE_ONLY, 0, &current_limit, 1);
-    if (status == OPTIGA_LIB_SUCCESS)
-    {
-        tr_debug("Set current limit to %dmA", current_limit);
-        ready = true;
-    }
-    else
-    {
-        tr_warn("Failed to set current limit to %dmA", current_limit);
-    }
-
-}
 
 /**
  *  @brief      Generates ECC keypair using the Trust X API.
@@ -126,6 +88,7 @@ mbedtls_pk_info_t TrustX::GetConfiguredPkInfo(void)
 /**
  *  @brief      TrustX wrapper for mbedtls signing operation.
  *  @author     Lee Tze Han
+ *  @return     0 on success or error code on failure
  */
 int TrustX::SignFuncWrap(void *ctx, mbedtls_md_type_t md_alg,
                         const unsigned char *hash, size_t hash_len,
@@ -165,6 +128,7 @@ int TrustX::SignFuncWrap(void *ctx, mbedtls_md_type_t md_alg,
 /**
  *  @brief      This function computes the ECDSA signature of a previously-hashed message.
  *  @author     Lee Tze Han
+ *  @return     0 on success or error code on failure
  *  @note       Overrides the default mbedTLS implementation to use the Trust X
  */
 #ifdef MBEDTLS_ECDSA_SIGN_ALT
@@ -210,6 +174,7 @@ cleanup:
 /**
  *  @brief      This function verifies the ECDSA signature of a previously-hashed message.
  *  @author     Lee Tze Han
+ *  @return     0 on success or error code on failure
  *  @note       Overrides the default mbedTLS implementation to use the Trust X
  */
 #ifdef MBEDTLS_ECDSA_VERIFY_ALT
@@ -287,6 +252,7 @@ int mbedtls_ecdsa_verify(mbedtls_ecp_group *grp,
 /**
  *  @brief      This function generates an ECDSA keypair on the given curve.
  *  @author     Lee Tze Han
+ *  @return     0 on success or error code on failure
  *  @note       Overrides the default mbedTLS implementation to use the Trust X
  */
 #ifdef MBEDTLS_ECDSA_GENKEY_ALT
@@ -337,6 +303,7 @@ int mbedtls_ecdsa_genkey(mbedtls_ecdsa_context *ctx, mbedtls_ecp_group_id gid,
 /**
  *  @brief      This function generates an ECDH keypair on an elliptic curve.
  *  @author     Lee Tze Han
+ *  @return     0 on success or error code on failure
  *  @note       Overrides the default mbedTLS implementation to use the Trust X
  */
 #ifdef MBEDTLS_ECDH_GEN_PUBLIC_ALT
@@ -385,6 +352,7 @@ int mbedtls_ecdh_gen_public(mbedtls_ecp_group *grp, mbedtls_mpi *d, mbedtls_ecp_
 /**
  *  @brief      This function computes the shared secret.
  *  @author     Lee Tze Han
+ *  @return     0 on success or error code on failure
  *  @note       Overrides the default mbedTLS implementation to use the Trust X
  */
 #ifdef MBEDTLS_ECDH_COMPUTE_SHARED_ALT
@@ -443,6 +411,7 @@ int mbedtls_ecdh_compute_shared(mbedtls_ecp_group *grp, mbedtls_mpi *z,
 /**
  *  @brief      Entropy poll callback for a hardware source.
  *  @author     Lee Tze Han
+ *  @return     0 (success) / 1 (failure)
  *  @note       Uses the Trust X TRNG to seed mbedTLS DRNG
  */
 #ifdef MBEDTLS_ENTROPY_HARDWARE_ALT

@@ -24,7 +24,7 @@
         },
         "use-secure-element": {
             "help": "Uses the secure element to handle client authentication and cryptographic operations in the TLS session",
-            "value": true
+            "value": false
         },
         "wifi-tx": {
             "help": "TX pin to WiFi module",

@@ -12,9 +12,9 @@
 #include "global_params.h"
 #include "conversions.h"
 #include "communications_network.h"
-#include "se_trustx.h"
 #include "decada_manager.h"
 #include "persist_store.h"
+#include "se_trustx.h"
 #include "time_engine.h"
 
 std::string const SENSOR_PUB_TOPIC = std::string("/sys/") + MBED_CONF_APP_DECADA_PRODUCT_KEY + "/" + device_uuid + "/thing/measurepoint/post";
