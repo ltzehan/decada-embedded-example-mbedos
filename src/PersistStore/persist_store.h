@@ -20,12 +20,16 @@
 #include "mbed.h"
 #include "persist_config.h"
 
+/* Forward declaration */
+struct BootManagerPass;
+
 void WriteConfig(const PersistConfig& pconf);
 void WriteSystemTime(const time_t time);
 void WriteSwVer(const std::string sw_ver);
 void WriteInitFlag(const std::string flag);
 void WriteWifiSsid(const std::string ssid);
 void WriteWifiPass(const std::string pass);
+void WriteBootManagerPass(const BootManagerPass& pass);
 void WriteCycleInterval(const std::string interval);
 void WriteClientCertificate(const std::string cert);
 void WriteClientCertificateSerialNumber(const std::string cert_sn);
@@ -39,6 +43,7 @@ std::string ReadSwVer(void);
 std::string ReadInitFlag(void);
 std::string ReadWifiSsid(void);
 std::string ReadWifiPass(void);
+BootManagerPass ReadBootManagerPass(void);
 std::string ReadCycleInterval(void);
 std::string ReadClientCertificate(void);
 std::string ReadClientCertificateSerialNumber(void);
