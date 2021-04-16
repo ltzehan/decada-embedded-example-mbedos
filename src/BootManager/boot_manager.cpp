@@ -18,7 +18,7 @@
 UnbufferedSerial pc(USBTX, USBRX, 115200);
 
 const chrono::seconds boot_timeout = 5s;    
-const std::string sdk_ver = "3.1.0";
+const std::string sdk_ver = "3.2.0";
 const uint8_t max_login_attempts = 3;
 const std::string poll_rate_ms = "10000";
 const std::string uuid = GetDeviceUid();
@@ -113,7 +113,7 @@ bool EnterBootManager(void)
 }
 
 /**
- *  @brief  Main bootloader logic. Configures MANUCA OS based on user inputs
+ *  @brief  Main bootloader logic. Configures DECADA Embedded Example based on user inputs
  *  @author Lau Lee Hong, Ng Tze Yang
  */
 void RunBootManager(void)
@@ -143,7 +143,7 @@ void RunBootManager(void)
         /* Quit Bootmanager */
         if (user_input == "-2")
         {
-            printf("End of configuration. MANUCA OS will restart.\r\n");
+            printf("End of configuration. DECADA Embedded Example will restart.\r\n");
             NVIC_SystemReset();
         }
         /* Reset Defaults */

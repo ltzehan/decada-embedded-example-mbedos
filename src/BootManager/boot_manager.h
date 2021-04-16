@@ -19,11 +19,7 @@
 
 #include <string> 
 #include "mbed.h"
-
-struct BootManagerPass {
-    std::string derived_key;
-    std::string salt;
-};
+#include "persist_config.h"
 
 void PrintHeader(void);
 void PrintMenu(void);

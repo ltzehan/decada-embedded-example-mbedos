@@ -20,9 +20,6 @@
 #include "mbed.h"
 #include "persist_config.h"
 
-/* Forward declaration */
-struct BootManagerPass;
-
 void WriteConfig(const PersistConfig& pconf);
 void WriteSystemTime(const time_t time);
 void WriteSwVer(const std::string sw_ver);

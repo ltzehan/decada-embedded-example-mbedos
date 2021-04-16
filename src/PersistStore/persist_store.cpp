@@ -8,7 +8,6 @@
 #include "mbed-trace/mbed_trace.h"
 #include "kvstore_global_api.h"
 #include "persist_store.h"
-#include "boot_manager.h"
 #include "conversions.h"
 
 #define TRACE_GROUP "PersistStore"
