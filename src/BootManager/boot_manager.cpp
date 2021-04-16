@@ -379,8 +379,6 @@ bool CheckBootManagerPass(std::string pass)
         }
     }
 
-    printf("Time taken: %llu\r\n", t.elapsed_time().count());
-
     return ok;
 }
 
